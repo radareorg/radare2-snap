@@ -1,5 +1,1 @@
-# Snap packaging
-parts
-prime
-stage
-*.snap
+/*.snap

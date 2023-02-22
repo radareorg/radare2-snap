@@ -1,82 +1,73 @@
 name: radare2
-version: '4.5.0'
-base: core18
-summary: Radare2 reverse engineering framework and tool
+base: core20
+version: '5.8.2'
+summary: UNIX-like reverse engineering framework and command-line toolset
 description: |
-  Radare2 (also known as r2) is a complete framework for reverse-engineering 
-  and analyzing binaries; composed of a set of small utilities 
-  that can be used together or independently from the command line. 
-  Built around a disassembler for computer software which generates 
-  assembly language source code from machine-executable code, 
-  it supports a variety of executable formats for different processors 
-  and operating systems.
+  r2 is a complete rewrite of radare. It provides a set of libraries, tools and
+  plugins to ease reverse engineering tasks.
 
-grade: devel # Development version, can only publish to beta/candidate channels.
-confinement: devmode # Unrestricted access, only to beta/candidate channels.
+  The radare project started as a simple command-line hexadecimal editor focused
+  on forensics. Today, r2 is a featureful low-level command-line tool with
+  support for scripting. r2 can edit files on local hard drives, view kernel
+  memory, and debug programs locally or via a remote gdb server. r2's wide
+  architecture support allows you to analyze, emulate, debug, modify, and
+  disassemble any binary.
 
-# radare2 requires in most cases privileged access to resources.
-# The following "plugs" are thus superfluous because the "devmode" confinement
-# gives full access to the system as if it were a DEB/RPM package.
-# With the following plugs though, and the "strict" confinement, radare2
-# would be able to do things like editing an executable file in the $HOME folder.
+website: https://www.radare.org/
+issues: https://github.com/radareorg/radare2/issues
+contact: https://github.com/radareorg/radare2#community
+source-code: https://github.com/radareorg/radare2-snap.git
+license: LGPL-3.0-only
+
+grade: devel
+confinement: strict
+compression: xz
+
+plugs:
+  home:
 
 apps:
-  radare2:
-    command: usr/bin/radare2
-    plugs: [home]
-  r2pm:
-    command: usr/bin/r2pm
-    plugs: [home]
+  r2:
+    command: bin/r2
   r2agent:
-    command: usr/bin/r2agent
-    plugs: [home, network-bind]
-  rafind2:
-    command: usr/bin/rafind2
-    plugs: [home]
-  rahash2:
-    command: usr/bin/rahash2
-    plugs: [home]
-  rasm2:
-    command: usr/bin/rasm2
-    plugs: [home]
+    command: bin/r2agent
+  r2p:
+    command: bin/r2p
+  r2pm:
+    command: bin/r2pm
+  r2r:
+    command: bin/r2r
   rabin2:
-    command: usr/bin/rabin2
-    plugs: [home]
+    command: bin/rabin2
+  radare2:
+    command: bin/radare2
   radiff2:
-    command: usr/bin/radiff2
-    plugs: [home]
+    command: bin/radiff2
+  rafind2:
+    command: bin/rafind2
   ragg2:
-    command: usr/bin/ragg2
-    plugs: [home]
+    command: bin/ragg2
+  rahash2:
+    command: bin/rahash2
   rarun2:
-    command: usr/bin/rarun2
-    plugs: [home]
-  rax2:
-    command: usr/bin/rax2
-    plugs: [home]
+    command: bin/rarun2
   rasign2:
-    command: usr/bin/rasign2
-    plugs: [home]
+    command: bin/rasign2
+  rasm2:
+    command: bin/rasm2
+  ravc2:
+    command: bin/ravc2
+  rax2:
+    command: bin/rax2
 
 parts:
   radare2:
-    source: https://github.com/radareorg/radare2.git
-    source-tag: '4.5.0'
-    plugin: meson
-    meson-parameters: [--prefix=/usr]
-    override-build: |
-      pip3 install --system meson
-      snapcraftctl build
-    build-packages:
-      - python3-pip
-      - python3-setuptools
-      - libmagic-dev
-      - pkg-config
-      - libzip-dev
-      - liblz4-dev
-      - libssl-dev
-      - libbsd-dev
-      - libcapstone-dev
-      - libuv1-dev
-    stage-packages:
-      - libuv1
+    plugin: autotools
+    source-type: tar
+    source: https://github.com/radareorg/radare2/releases/download/5.8.2/radare2-5.8.2.tar.xz
+    build-environment:
+      - CFLAGS: "$CFLAGS -O3"
+    autotools-configure-parameters:
+      - --with-checks-level=0
+      - --prefix=/usr
+
