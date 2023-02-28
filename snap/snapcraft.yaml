@@ -19,7 +19,7 @@ contact: https://github.com/radareorg/radare2#community
 source-code: https://github.com/radareorg/radare2-snap.git
 license: LGPL-3.0-only
 
-grade: devel
+grade: stable
 confinement: strict
 compression: xz
 
@@ -89,8 +89,8 @@ parts:
     source-type: git
     source-depth: 1
     source-tag: $SNAPCRAFT_PROJECT_VERSION
-    # build-environment:
-    #   - CFLAGS: "$CFLAGS -O3"
+    build-environment:
+      - CFLAGS: "${CFLAGS:+} -O3"
     autotools-configure-parameters:
       - --prefix=/usr
       - --with-checks-level=0
@@ -110,7 +110,7 @@ parts:
     source-depth: 1
     source-tag: $SNAPCRAFT_PROJECT_VERSION
     build-environment:
-      #- CFLAGS: "$CFLAGS -O3"
+      - CFLAGS: "${CFLAGS:+} -O3"
       - LD_LIBRARY_PATH: "$CRAFT_STAGE/usr/lib${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}"
     override-pull: |
       craftctl default
@@ -128,7 +128,7 @@ parts:
     source-depth: 1
     source-tag: $SNAPCRAFT_PROJECT_VERSION
     build-environment:
-      # - CFLAGS: "$CFLAGS -O3"
+      - CFLAGS: "${CFLAGS:+} -O3"
       - LD_LIBRARY_PATH: "$CRAFT_STAGE/usr/lib${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}"
     autotools-configure-parameters:
       - --prefix=/usr
@@ -154,7 +154,7 @@ parts:
     source-depth: 1
     source-tag: 5.7.8
     build-environment:
-      # - CFLAGS: "$CFLAGS -O3"
+      - CFLAGS: "${CFLAGS:+} -O3"
       - LIBRARY_PATH: "$CRAFT_STAGE/usr/lib${LIBRARY_PATH:+:$LIBRARY_PATH}"
       - LD_LIBRARY_PATH: "$CRAFT_STAGE/usr/lib${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}"
     override-build: |
