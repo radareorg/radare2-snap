@@ -28,37 +28,45 @@ plugs:
 
 apps:
   r2:
-    command: bin/r2
+    command: usr/bin/r2
   r2agent:
-    command: bin/r2agent
+    command: usr/bin/r2agent
   r2p:
-    command: bin/r2p
+    command: usr/bin/r2p
   r2pm:
-    command: bin/r2pm
+    command: usr/bin/r2pm
   r2r:
-    command: bin/r2r
+    command: usr/bin/r2r
   rabin2:
-    command: bin/rabin2
+    command: usr/bin/rabin2
   radare2:
-    command: bin/radare2
+    command: usr/bin/radare2
   radiff2:
-    command: bin/radiff2
+    command: usr/bin/radiff2
   rafind2:
-    command: bin/rafind2
+    command: usr/bin/rafind2
   ragg2:
-    command: bin/ragg2
+    command: usr/bin/ragg2
   rahash2:
-    command: bin/rahash2
+    command: usr/bin/rahash2
   rarun2:
-    command: bin/rarun2
+    command: usr/bin/rarun2
   rasign2:
-    command: bin/rasign2
+    command: usr/bin/rasign2
   rasm2:
-    command: bin/rasm2
+    command: usr/bin/rasm2
   ravc2:
-    command: bin/ravc2
+    command: usr/bin/ravc2
   rax2:
-    command: bin/rax2
+    command: usr/bin/rax2
+
+layout:
+  /usr/lib/radare2:
+    symlink: $SNAP/usr/lib/radare2
+  /usr/share/radare2:
+    symlink: $SNAP/usr/share/radare2
+  /usr/share/doc/radare2:
+    symlink: $SNAP/usr/share/doc/radare2
 
 build-packages:
   - pkg-config
@@ -74,11 +82,14 @@ parts:
     # build-environment:
     #   - CFLAGS: "$CFLAGS -O3"
     autotools-configure-parameters:
-      - --prefix=/
+      - --prefix=/usr
       - --with-checks-level=0
     override-build: |
       craftctl default
-      sed -i 's,=//lib,=${prefix}/lib,' "$CRAFT_PART_INSTALL"/lib/pkgconfig/*.pc
+      sed -i 's,^libdir=.*,libdir=${prefix}/lib,' "$CRAFT_PART_INSTALL"/usr/lib/pkgconfig/*.pc
+    prime:
+      - -usr/include
+      - -usr/lib/pkgconfig
 
   r2ghidra:
     after:
@@ -90,12 +101,12 @@ parts:
     source-tag: $SNAPCRAFT_PROJECT_VERSION
     build-environment:
       #- CFLAGS: "$CFLAGS -O3"
-      - LD_LIBRARY_PATH: "$CRAFT_STAGE/lib${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}"
+      - LD_LIBRARY_PATH: "$CRAFT_STAGE/usr/lib${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}"
     override-pull: |
       craftctl default
       ./preconfigure
     autotools-configure-parameters:
-      - --prefix=/
+      - --prefix=/usr
       - --with-checks-level=0
 
   r2frida:
@@ -108,9 +119,9 @@ parts:
     source-tag: $SNAPCRAFT_PROJECT_VERSION
     build-environment:
       # - CFLAGS: "$CFLAGS -O3"
-      - LD_LIBRARY_PATH: "$CRAFT_STAGE/lib${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}"
+      - LD_LIBRARY_PATH: "$CRAFT_STAGE/usr/lib${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}"
     autotools-configure-parameters:
-      - --prefix=/
+      - --prefix=/usr
       - --with-checks-level=0
 
   meson-deps:
@@ -134,9 +145,9 @@ parts:
     source-tag: 5.7.8
     build-environment:
       # - CFLAGS: "$CFLAGS -O3"
-      - LIBRARY_PATH: "$CRAFT_STAGE/lib${LIBRARY_PATH:+:$LIBRARY_PATH}"
-      - LD_LIBRARY_PATH: "$CRAFT_STAGE/lib${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}"
+      - LIBRARY_PATH: "$CRAFT_STAGE/usr/lib${LIBRARY_PATH:+:$LIBRARY_PATH}"
+      - LD_LIBRARY_PATH: "$CRAFT_STAGE/usr/lib${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}"
     override-build: |
-      meson --prefix / --libdir lib -Dr2_libdir="$CRAFT_STAGE/lib" -Dr2_incdir="$CRAFT_STAGE/include/libr" -Dr2_plugdir="$CRAFT_STAGE/lib/radare2/last" -Djsc_folder="$CRAFT_PART_SRC" "$CRAFT_PART_SRC/p"
+      meson --prefix /usr --libdir lib -Dr2_libdir="$CRAFT_STAGE/usr/lib" -Dr2_incdir="$CRAFT_STAGE/usr/include/libr" -Dr2_plugdir="/usr/lib/radare2/$SNAPCRAFT_PROJECT_VERSION" -Djsc_folder="$CRAFT_PART_SRC" "$CRAFT_PART_SRC/p"
       ninja
       DESTDIR="$CRAFT_PART_INSTALL" ninja install
