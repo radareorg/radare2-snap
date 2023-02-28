@@ -68,6 +68,14 @@ layout:
   /usr/share/doc/radare2:
     symlink: $SNAP/usr/share/doc/radare2
 
+architectures:
+  - build-on: [amd64, arm64]
+    build-for: amd64
+  - build-on: [amd64, arm64]
+    build-for: arm64
+  - build-on: [amd64, arm64, armhf]
+    build-for: armhf
+
 build-packages:
   - pkg-config
   - curl
