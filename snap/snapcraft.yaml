@@ -31,6 +31,8 @@ apps:
     command: usr/bin/r2
   r2agent:
     command: usr/bin/r2agent
+    plugs:
+      - network-bind
   r2p:
     command: usr/bin/r2p
   r2pm:
