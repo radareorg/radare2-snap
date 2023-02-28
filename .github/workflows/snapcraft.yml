@@ -1,0 +1,20 @@
+name: snapcraft
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-22.04
+    steps:
+    - uses: actions/checkout@v3
+    - uses: snapcore/action-build@v1
+    # Make sure the snap is installable
+    - run: sudo snap install --dangerous *_amd64.snap
+    # Do some testing with the snap
+    - run: radare2 -H
+    - uses: actions/upload-artifact@v3
+      with:
+        name: radare2-snaps
+        path: "*.snap"
