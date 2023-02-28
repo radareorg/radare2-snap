@@ -1,5 +1,5 @@
 name: radare2
-base: core20
+base: core22
 version: '5.8.2'
 summary: UNIX-like reverse engineering framework and command-line toolset
 description: |
@@ -60,14 +60,83 @@ apps:
   rax2:
     command: bin/rax2
 
+build-packages:
+  - pkg-config
+  - curl
+
 parts:
   radare2:
     plugin: autotools
-    source-type: tar
-    source: https://github.com/radareorg/radare2/releases/download/5.8.2/radare2-5.8.2.tar.xz
-    build-environment:
-      - CFLAGS: "$CFLAGS -O3"
+    source: https://github.com/radareorg/radare2.git
+    source-type: git
+    source-depth: 1
+    source-tag: $SNAPCRAFT_PROJECT_VERSION
+    # build-environment:
+    #   - CFLAGS: "$CFLAGS -O3"
     autotools-configure-parameters:
+      - --prefix=/
       - --with-checks-level=0
-      - --prefix=/usr
+    override-build: |
+      craftctl default
+      sed -i 's,=//lib,=${prefix}/lib,' "$CRAFT_PART_INSTALL"/lib/pkgconfig/*.pc
 
+  r2ghidra:
+    after:
+      - radare2
+    plugin: autotools
+    source: https://github.com/radareorg/r2ghidra.git
+    source-type: git
+    source-depth: 1
+    source-tag: $SNAPCRAFT_PROJECT_VERSION
+    build-environment:
+      #- CFLAGS: "$CFLAGS -O3"
+      - LD_LIBRARY_PATH: "$CRAFT_STAGE/lib${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}"
+    override-pull: |
+      craftctl default
+      ./preconfigure
+    autotools-configure-parameters:
+      - --prefix=/
+      - --with-checks-level=0
+
+  r2frida:
+    after:
+      - radare2
+    plugin: autotools
+    source: https://github.com/nowsecure/r2frida.git
+    source-type: git
+    source-depth: 1
+    source-tag: $SNAPCRAFT_PROJECT_VERSION
+    build-environment:
+      # - CFLAGS: "$CFLAGS -O3"
+      - LD_LIBRARY_PATH: "$CRAFT_STAGE/lib${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}"
+    autotools-configure-parameters:
+      - --prefix=/
+      - --with-checks-level=0
+
+  meson-deps:
+    plugin: nil
+    build-packages:
+      - python3-pip
+      - ninja-build
+    override-build:
+        python3 -m pip install meson~=0.64.1
+    prime:
+      - -*
+
+  r2dec:
+    after:
+      - radare2
+      - meson-deps
+    plugin: meson
+    source: https://github.com/wargio/r2dec-js.git
+    source-type: git
+    source-depth: 1
+    source-tag: 5.7.8
+    build-environment:
+      # - CFLAGS: "$CFLAGS -O3"
+      - LIBRARY_PATH: "$CRAFT_STAGE/lib${LIBRARY_PATH:+:$LIBRARY_PATH}"
+      - LD_LIBRARY_PATH: "$CRAFT_STAGE/lib${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}"
+    override-build: |
+      meson --prefix / --libdir lib -Dr2_libdir="$CRAFT_STAGE/lib" -Dr2_incdir="$CRAFT_STAGE/include/libr" -Dr2_plugdir="$CRAFT_STAGE/lib/radare2/last" -Djsc_folder="$CRAFT_PART_SRC" "$CRAFT_PART_SRC/p"
+      ninja
+      DESTDIR="$CRAFT_PART_INSTALL" ninja install
