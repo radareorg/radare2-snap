@@ -139,6 +139,16 @@ parts:
       - --prefix=/usr
       - --with-checks-level=0
 
+  r2pipe-python:
+    after:
+      - radare2
+    plugin: python
+    source: . # Dummy source
+    stage-packages:
+      - python3-venv
+    python-packages:
+      - r2pipe
+
   meson-deps:
     plugin: nil
     build-packages:
