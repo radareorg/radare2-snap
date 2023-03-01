@@ -20,8 +20,8 @@ license: LGPL-3.0-only
 icon: snap/gui/logo.png
 
 base: core22
-grade: stable
-confinement: classic
+grade: devel
+confinement: devmode
 compression: xz
 
 apps:
