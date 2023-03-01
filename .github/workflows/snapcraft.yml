@@ -10,8 +10,11 @@ jobs:
     steps:
     - uses: actions/checkout@v3
     - uses: snapcore/action-build@v1
+      # Use snapcraft 7.3 prerelase to support classic on core22
+      with:
+        snapcraft-channel: latest/candidate
     # Make sure the snap is installable
-    - run: sudo snap install --dangerous *_amd64.snap
+    - run: sudo snap install --dangerous --classic *_amd64.snap
     # Do some testing with the snap
     - run: radare2 -H
     - uses: actions/upload-artifact@v3

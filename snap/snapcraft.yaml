@@ -20,19 +20,14 @@ source-code: https://github.com/radareorg/radare2-snap.git
 license: LGPL-3.0-only
 
 grade: stable
-confinement: strict
+confinement: classic
 compression: xz
-
-plugs:
-  home:
 
 apps:
   r2:
     command: usr/bin/r2
   r2agent:
     command: usr/bin/r2agent
-    plugs:
-      - network-bind
   r2p:
     command: usr/bin/r2p
   r2pm:
@@ -62,13 +57,13 @@ apps:
   rax2:
     command: usr/bin/rax2
 
-layout:
-  /usr/lib/radare2:
-    symlink: $SNAP/usr/lib/radare2
-  /usr/share/radare2:
-    symlink: $SNAP/usr/share/radare2
-  /usr/share/doc/radare2:
-    symlink: $SNAP/usr/share/doc/radare2
+environment:
+  # R2_PREFIX: "$SNAP/usr" # Currently not parsed
+  # R2_LIBDIR: "$SNAP/usr/lib" # Currently not parsed
+  # R2_INCDIR: "$SNAP/usr/include/libr" # Currently not parsed
+  R2_LIBR_PLUGINS: "$SNAP/usr/lib/radare2/$SNAP_VERSION"
+  R2_MAGICPATH: "$SNAP/usr/share/radare2/$SNAP_VERSION/magic"
+  SLEIGHHOME: "$SNAP/usr/lib/radare2/$SNAP_VERSION"
 
 architectures:
   - build-on: [amd64, arm64]
@@ -89,6 +84,8 @@ parts:
     source-type: git
     source-depth: 1
     source-tag: $SNAPCRAFT_PROJECT_VERSION
+    build-attributes:
+      - enable-patchelf
     build-environment:
       - CFLAGS: "${CFLAGS:+} -O3"
     autotools-configure-parameters:
@@ -109,6 +106,8 @@ parts:
     source-type: git
     source-depth: 1
     source-tag: $SNAPCRAFT_PROJECT_VERSION
+    build-attributes:
+      - enable-patchelf
     build-environment:
       - CFLAGS: "${CFLAGS:+} -O3"
       - LD_LIBRARY_PATH: "$CRAFT_STAGE/usr/lib${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}"
@@ -127,6 +126,8 @@ parts:
     source-type: git
     source-depth: 1
     source-tag: $SNAPCRAFT_PROJECT_VERSION
+    build-attributes:
+      - enable-patchelf
     build-environment:
       - CFLAGS: "${CFLAGS:+} -O3"
       - LD_LIBRARY_PATH: "$CRAFT_STAGE/usr/lib${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}"
@@ -153,6 +154,8 @@ parts:
     source-type: git
     source-depth: 1
     source-tag: 5.7.8
+    build-attributes:
+      - enable-patchelf
     build-environment:
       - CFLAGS: "${CFLAGS:+} -O3"
       - LIBRARY_PATH: "$CRAFT_STAGE/usr/lib${LIBRARY_PATH:+:$LIBRARY_PATH}"
