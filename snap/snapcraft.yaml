@@ -92,6 +92,7 @@ parts:
     autotools-configure-parameters:
       - --prefix=/usr
       - --with-checks-level=0
+    # This override will not be needed in radare version 5.8.3
     override-build: |
       craftctl default
       sed -i 's,^libdir=.*,libdir=${prefix}/lib,' "$CRAFT_PART_INSTALL"/usr/lib/pkgconfig/*.pc
@@ -111,6 +112,7 @@ parts:
       - enable-patchelf
     build-environment:
       - CFLAGS: "${CFLAGS:+} -O3"
+      # Not required with snapcraft 7.3
       - LD_LIBRARY_PATH: "$CRAFT_STAGE/usr/lib${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}"
     override-pull: |
       craftctl default
@@ -131,6 +133,7 @@ parts:
       - enable-patchelf
     build-environment:
       - CFLAGS: "${CFLAGS:+} -O3"
+      # Not required with snapcraft 7.3
       - LD_LIBRARY_PATH: "$CRAFT_STAGE/usr/lib${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}"
     autotools-configure-parameters:
       - --prefix=/usr
@@ -159,9 +162,14 @@ parts:
       - enable-patchelf
     build-environment:
       - CFLAGS: "${CFLAGS:+} -O3"
+      # Not required with snapcraft 7.3
       - LIBRARY_PATH: "$CRAFT_STAGE/usr/lib${LIBRARY_PATH:+:$LIBRARY_PATH}"
       - LD_LIBRARY_PATH: "$CRAFT_STAGE/usr/lib${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}"
+      # Fix meson radare paths detection
+      - R2_LIBDIR: "$CRAFT_STAGE/usr/lib"
+      - R2_INCDIR: "$CRAFT_STAGE/usr/include/libr"
+      - R2_LIBR_PLUGINS: "$(radare2 -H R2_LIBR_PLUGINS)"
     override-build: |
-      meson --prefix /usr --libdir lib -Dr2_libdir="$CRAFT_STAGE/usr/lib" -Dr2_incdir="$CRAFT_STAGE/usr/include/libr" -Dr2_plugdir="/usr/lib/radare2/$SNAPCRAFT_PROJECT_VERSION" -Djsc_folder="$CRAFT_PART_SRC" "$CRAFT_PART_SRC/p"
+      meson --prefix /usr --libdir lib -Dr2_libdir="$R2_LIBDIR" -Dr2_incdir="$R2_INCDIR" -Dr2_plugdir="$R2_LIBR_PLUGINS" -Djsc_folder="$CRAFT_PART_SRC" "$CRAFT_PART_SRC/p"
       ninja
       DESTDIR="$CRAFT_PART_INSTALL" ninja install
