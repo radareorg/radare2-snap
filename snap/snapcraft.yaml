@@ -24,6 +24,20 @@ grade: devel
 confinement: devmode
 compression: xz
 
+# Add plugs in case the user force the snap in jail mode
+plugs:
+  block-devices:
+  home:
+  network-bind:
+  network:
+  physical-memory-control:
+  process-control:
+  raw-usb:
+  raw-volume:
+  serial-port:
+  shared-memory:
+  system-trace:
+
 apps:
   r2:
     command: usr/bin/r2
