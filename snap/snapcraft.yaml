@@ -126,8 +126,6 @@ parts:
       - enable-patchelf
     build-environment:
       - CFLAGS: "${CFLAGS:+} -O3"
-      # Not required with snapcraft 7.3
-      - LD_LIBRARY_PATH: "$CRAFT_STAGE/usr/lib${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}"
     override-pull: |
       craftctl default
       ./preconfigure
@@ -147,8 +145,6 @@ parts:
       - enable-patchelf
     build-environment:
       - CFLAGS: "${CFLAGS:+} -O3"
-      # Not required with snapcraft 7.3
-      - LD_LIBRARY_PATH: "$CRAFT_STAGE/usr/lib${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}"
     autotools-configure-parameters:
       - --prefix=/usr
       - --with-checks-level=0
@@ -186,9 +182,6 @@ parts:
       - enable-patchelf
     build-environment:
       - CFLAGS: "${CFLAGS:+} -O3"
-      # Not required with snapcraft 7.3
-      - LIBRARY_PATH: "$CRAFT_STAGE/usr/lib${LIBRARY_PATH:+:$LIBRARY_PATH}"
-      - LD_LIBRARY_PATH: "$CRAFT_STAGE/usr/lib${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}"
       # Fix meson radare paths detection
       - R2_LIBDIR: "$CRAFT_STAGE/usr/lib"
       - R2_INCDIR: "$CRAFT_STAGE/usr/include/libr"
