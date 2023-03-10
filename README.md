@@ -13,9 +13,9 @@ The resulting build includes the following projects:
 
 ## Install
 
-To install currently is only available in `edge` as `devmode`.
+Radare requires snap classic confinement, to install run:
 ```
-sudo snap install --edge --devmode radare2
+sudo snap install radare2 --classic
 ```
 Once installed all radare commands are available as:
 `radare2.<command>` (ex: `radare2.rasm2`).
