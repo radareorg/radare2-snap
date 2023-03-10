@@ -20,23 +20,9 @@ license: LGPL-3.0-only
 icon: snap/gui/logo.png
 
 base: core22
-grade: devel
-confinement: devmode
+grade: stable
+confinement: classic
 compression: xz
-
-# Add plugs in case the user force the snap in jail mode
-plugs:
-  block-devices:
-  home:
-  network-bind:
-  network:
-  physical-memory-control:
-  process-control:
-  raw-usb:
-  raw-volume:
-  serial-port:
-  shared-memory:
-  system-trace:
 
 apps:
   r2:
