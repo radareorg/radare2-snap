@@ -1,5 +1,5 @@
 name: radare2
-version: '5.8.2'
+version: '5.8.4'
 summary: UNIX-like reverse engineering framework and command-line toolset
 description: |
   r2 is a complete rewrite of radare. It provides a set of libraries, tools and
@@ -92,10 +92,6 @@ parts:
     autotools-configure-parameters:
       - --prefix=/usr
       - --with-checks-level=0
-    # This override will not be needed in radare version 5.8.3
-    override-build: |
-      craftctl default
-      sed -i 's,^libdir=.*,libdir=${prefix}/lib,' "$CRAFT_PART_INSTALL"/usr/lib/pkgconfig/*.pc
     prime:
       - -usr/include
       - -usr/lib/pkgconfig
