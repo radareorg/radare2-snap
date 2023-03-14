@@ -59,11 +59,7 @@ apps:
     command: usr/bin/rax2
 
 environment:
-  # R2_PREFIX: "$SNAP/usr" # Currently not parsed
-  # R2_LIBDIR: "$SNAP/usr/lib" # Currently not parsed
-  # R2_INCDIR: "$SNAP/usr/include/libr" # Currently not parsed
-  R2_LIBR_PLUGINS: "$SNAP/usr/lib/radare2/$SNAP_VERSION"
-  R2_MAGICPATH: "$SNAP/usr/share/radare2/$SNAP_VERSION/magic"
+  R2_PREFIX: "$SNAP/usr"
   SLEIGHHOME: "$SNAP/usr/lib/radare2/$SNAP_VERSION"
 
 architectures:
