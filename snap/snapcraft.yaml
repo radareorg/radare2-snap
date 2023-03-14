@@ -107,7 +107,7 @@ parts:
     source: https://github.com/radareorg/r2ghidra.git
     source-type: git
     source-depth: 1
-    source-tag: $SNAPCRAFT_PROJECT_VERSION
+    source-tag: '5.8.2'
     build-attributes:
       - enable-patchelf
     build-environment:
@@ -127,7 +127,7 @@ parts:
     source: https://github.com/nowsecure/r2frida.git
     source-type: git
     source-depth: 1
-    source-tag: $SNAPCRAFT_PROJECT_VERSION
+    source-tag: '5.8.2'
     build-attributes:
       - enable-patchelf
     build-environment:
