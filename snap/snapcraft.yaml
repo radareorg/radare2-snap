@@ -165,7 +165,7 @@ parts:
     source: https://github.com/wargio/r2dec-js.git
     source-type: git
     source-depth: 1
-    source-tag: 5.7.8
+    source-tag: '5.7.8'
     build-attributes:
       - enable-patchelf
     build-environment:
@@ -173,7 +173,7 @@ parts:
       # Fix meson radare paths detection
       - R2_LIBDIR: "$CRAFT_STAGE/usr/lib"
       - R2_INCDIR: "$CRAFT_STAGE/usr/include/libr"
-      - R2_LIBR_PLUGINS: "$(radare2 -H R2_LIBR_PLUGINS)"
+      - R2_LIBR_PLUGINS: "/usr/lib/radare2/$SNAPCRAFT_PROJECT_VERSION"
     override-build: |
       meson --prefix /usr --libdir lib -Dr2_libdir="$R2_LIBDIR" -Dr2_incdir="$R2_INCDIR" -Dr2_plugdir="$R2_LIBR_PLUGINS" -Djsc_folder="$CRAFT_PART_SRC" "$CRAFT_PART_SRC/p"
       ninja
