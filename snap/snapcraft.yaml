@@ -1,5 +1,5 @@
 name: radare2
-version: '5.8.4'
+version: '5.8.6'
 summary: UNIX-like reverse engineering framework and command-line toolset
 description: |
   r2 is a complete rewrite of radare. It provides a set of libraries, tools and
