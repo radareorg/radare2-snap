@@ -1,0 +1,40 @@
+name: Check for updates
+on:
+  schedule: # for scheduling to work this file must be in the default branch
+  - cron: "30 * * * *" # run every hour
+  workflow_dispatch: # can be manually dispatched under GitHub's "Actions" tab 
+
+jobs:
+  update-versions:
+    runs-on: ubuntu-latest
+
+    permissions:
+      # Give the default GITHUB_TOKEN write permission to commit and push the
+      # added or changed files to the repository.
+      contents: write   
+
+    steps:
+      # Install dependencies
+      - name: Install required dependencies
+        run: sudo snap install yq
+
+      # Perform the checkout of the main branch
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          ref: main
+
+      # Perform the actual version check
+      - name: Check for new versions for all parts
+        run: scripts/update-versions.sh
+        env:
+          GH_TOKEN: ${{ github.token }}
+
+      # Commit changed file back to the repository
+      - name: Commit changes
+        uses: stefanzweifel/git-auto-commit-action@v4
+        with:
+          commit_message: Automatic update versions
+          #commit_user_name: 'github-actions[bot]'
+          #commit_user_email: '41898282+github-actions[bot]@users.noreply.github.com'
+          commit_author: 'github-actions[bot] <41898282+github-actions[bot]@users.noreply.github.com>'

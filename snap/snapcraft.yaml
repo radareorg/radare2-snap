@@ -11,19 +11,16 @@ description: |
   memory, and debug programs locally or via a remote gdb server. r2's wide
   architecture support allows you to analyze, emulate, debug, modify, and
   disassemble any binary.
-
 website: https://www.radare.org/
 issues: https://github.com/radareorg/radare2/issues
 contact: https://github.com/radareorg/radare2#community
 source-code: https://github.com/radareorg/radare2-snap.git
 license: LGPL-3.0-only
 icon: snap/gui/logo.png
-
 base: core22
 grade: stable
 confinement: classic
 compression: xz
-
 apps:
   r2:
     command: usr/bin/r2
@@ -57,11 +54,9 @@ apps:
     command: usr/bin/ravc2
   rax2:
     command: usr/bin/rax2
-
 environment:
   R2_PREFIX: "$SNAP/usr"
   SLEIGHHOME: "$SNAP/usr/lib/radare2/$SNAP_VERSION"
-
 architectures:
   - build-on: [amd64, arm64]
     build-for: amd64
@@ -69,11 +64,9 @@ architectures:
     build-for: arm64
   - build-on: [armhf, arm64, amd64]
     build-for: armhf
-
 build-packages:
   - pkg-config
   - curl
-
 parts:
   radare2:
     plugin: autotools
@@ -91,7 +84,6 @@ parts:
     prime:
       - -usr/include
       - -usr/lib/pkgconfig
-
   r2ghidra:
     after:
       - radare2
@@ -111,7 +103,6 @@ parts:
     autotools-configure-parameters:
       - --prefix=/usr
       - --with-checks-level=0
-
   r2frida:
     after:
       - radare2
@@ -128,7 +119,6 @@ parts:
     autotools-configure-parameters:
       - --prefix=/usr
       - --with-checks-level=0
-
   r2pipe-python:
     after:
       - radare2
@@ -138,17 +128,14 @@ parts:
       - python3-venv
     python-packages:
       - r2pipe
-
   meson-deps:
     plugin: nil
     build-packages:
       - python3-pip
       - ninja-build
-    override-build:
-        python3 -m pip install meson~=0.64.1
+    override-build: python3 -m pip install meson~=0.64.1
     prime:
       - -*
-
   r2dec:
     after:
       - radare2
