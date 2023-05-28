@@ -2,7 +2,7 @@
 
 set -ae
 
-cd "$(dirname "$0")/.."
+cd "$(dirname "$0")/../.."
 
 getLatestReleaseTag() {
   echo "Checking latest release version for $1..." > /dev/stderr
