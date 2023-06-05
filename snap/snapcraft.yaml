@@ -110,7 +110,7 @@ parts:
     source: https://github.com/nowsecure/r2frida.git
     source-type: git
     source-depth: 1
-    source-tag: '5.8.6'
+    source-tag: '5.8.4'
     build-attributes:
       - enable-patchelf
     build-environment:
