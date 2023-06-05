@@ -1,0 +1,92 @@
+name: Build images
+on:
+  workflow_call: # called on version update detected
+  workflow_dispatch: # can be manually dispatched under GitHub's "Actions" tab 
+  push:
+    branches:
+      - 'main'
+    paths:
+      - 'snap/**'
+      - 'docker/**'
+
+jobs:
+  snapcraft:
+    runs-on: ubuntu-latest
+    environment: snapcraft.io
+    strategy:
+      matrix:
+        arch: [amd64, arm64, armhf]
+    steps:
+      # Perform the checkout of the main branch
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          ref: main
+
+      - name: Build snap
+        id: build
+        uses: snapcore/action-build@v1
+        with:
+          snapcraft-args: --build-for=${{ matrix.arch }}
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: snaps
+          path: ${{ steps.build.outputs.snap }}
+  
+      - name: Publish snap
+        uses: snapcore/action-publish@v1
+        env:
+          SNAPCRAFT_STORE_CREDENTIALS: ${{ secrets.STORE_LOGIN }}
+        with:
+          snap: ${{ steps.build.outputs.snap }}
+          release: stable
+
+  docker:
+    needs:
+      - snapcraft
+    runs-on: ubuntu-latest
+    environment: docker.io
+    steps:
+      # Perform the checkout of the main branch
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          ref: main
+
+      - name: Download snap artifacts
+        uses: actions/download-artifact@v3
+        with:
+          name: snaps
+          path: '.'
+
+      - name: Extract artifacts
+        id: extract
+        run: .github/scripts/extract-docker-files.sh
+
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v2
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
+
+      - name: Login to Docker Hub
+        uses: docker/login-action@v2
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - name: Build docker images
+        env:
+          SNAP_CORE_YEAR: ${{ steps.extract.outputs.snap_core_year }}
+          R2_VERSION: ${{ steps.extract.outputs.r2_version }}
+        working-directory: docker
+        run: docker buildx bake --pull
+
+      - name: Push docker images
+        env:
+          SNAP_CORE_YEAR: ${{ steps.extract.outputs.snap_core_year }}
+          R2_VERSION: ${{ steps.extract.outputs.r2_version }}
+        working-directory: docker
+        run: docker buildx bake --push

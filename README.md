@@ -11,7 +11,7 @@ The resulting build includes the following projects:
 * [r2frida](https://github.com/nowsecure/r2frida)
 * [r2dec](https://github.com/wargio/r2dec-js)
 
-## Install
+## Install snap
 
 Radare requires snap classic confinement, to install run:
 ```
@@ -22,3 +22,17 @@ Once installed all radare commands are available as:
 
 
 [![Get it from the Snap Store](https://snapcraft.io/static/images/badges/en/snap-store-black.svg)](https://snapcraft.io/radare2)
+
+## Docker
+
+With the same snap build a docker image is also generated.
+
+To use the docker image:
+```
+docker run --rm -ti radare/radare2
+```
+
+And to use debugging with docker:
+```
+docker run --rm --tty --interactive --privileged --cap-add=SYS_PTRACE --security-opt seccomp=unconfined --security-opt apparmor=unconfined radare/radare2
+```
