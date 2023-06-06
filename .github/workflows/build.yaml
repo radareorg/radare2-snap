@@ -12,7 +12,9 @@ on:
 jobs:
   snapcraft:
     runs-on: ubuntu-latest
-    environment: snapcraft.io
+    environment:
+      name: snapcraft.io
+      url: https://snapcraft.io/radare2
     strategy:
       matrix:
         arch: [amd64, arm64, armhf]
@@ -47,7 +49,9 @@ jobs:
     needs:
       - snapcraft
     runs-on: ubuntu-latest
-    environment: docker.io
+    environment:
+      name: docker.io
+      url: https://hub.docker.com/r/radare/radare2
     steps:
       # Perform the checkout of the main branch
       - name: Checkout

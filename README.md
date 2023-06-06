@@ -25,7 +25,7 @@ Once installed all radare commands are available as:
 
 ## Docker
 
-With the same snap build a docker image is also generated.
+With the same snap build a [docker image](https://hub.docker.com/r/radare/radare2) is also generated.
 
 To use the docker image:
 ```
