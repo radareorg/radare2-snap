@@ -6,4 +6,4 @@ This can be created using `snapcraft` or extracted from an `.snap` files using `
 
 As an example to see the process done during the CI build, the extract is performed using this script `../.github/scripts/extract-docker-files.sh`.
 
-Also is required to provide the `R2_VERSION`, `SNAP_CORE_YEAR` and `TARGETARCH` to build the docker image itself.
+Also is required to provide at least the `SNAP_CORE_YEAR` and `TARGETARCH` to build the docker image itself.

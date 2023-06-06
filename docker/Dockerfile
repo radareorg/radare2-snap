@@ -1,5 +1,5 @@
 ARG SNAP_CORE_YEAR
-FROM ubuntu:${SNAP_CORE_YEAR}.04
+FROM ubuntu:"${SNAP_CORE_YEAR}.04"
 ARG SNAP_CORE_YEAR
 ARG TARGETARCH
 ARG IMAGEREFNAME
@@ -14,15 +14,18 @@ LABEL org.opencontainers.image.title="radare2" \
       org.opencontainers.image.url="https://www.radare.org/" \
       org.opencontainers.image.source="https://github.com/radareorg/radare2-snap"
 
-COPY files/${TARGETARCH} /app
-RUN mkdir -p /snap/core${SNAP_CORE_YEAR} /snap/radare2 /var/app && \
-    ln -s / /snap/core${SNAP_CORE_YEAR}/current && \
-    ln -s /app /snap/radare2/current
+# Copy uncompressed .snap into /app
+COPY "files/${TARGETARCH}" /app
 
-# Create non-root user
-RUN useradd -m r2 && \
-  adduser r2 sudo && \
-  echo "r2:r2" | chpasswd
+# Replicate snap structure and create non-root user
+RUN mkdir -p "/snap/core${SNAP_CORE_YEAR}" "/snap/radare2" "/var/app" "/var/snap/radare2" && \
+    ln -s "/" "/snap/core${SNAP_CORE_YEAR}/current" && \
+    ln -s "/app" "/snap/radare2/current" && \
+    ln -s "/var/app" "/var/snap/radare2/current" && \
+    ln -s "/var/app" "/var/snap/radare2/common" && \
+    useradd -m r2 && \
+    adduser r2 sudo && \
+    echo "r2:r2" | chpasswd
 
 # Initialise base user
 USER r2
@@ -40,4 +43,3 @@ ENV HOME="/home/r2" \
     SNAP_USER_COMMON="/home/r2" \
     SNAP_DATA="/var/app" \
     SNAP_COMMON="/var/app"
-
