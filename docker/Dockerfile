@@ -15,7 +15,7 @@ LABEL org.opencontainers.image.title="radare2" \
       org.opencontainers.image.source="https://github.com/radareorg/radare2-snap"
 
 COPY files/${TARGETARCH} /app
-RUN mkdir -p /snap/core${SNAP_CORE_YEAR} /snap/radare2 && \
+RUN mkdir -p /snap/core${SNAP_CORE_YEAR} /snap/radare2 /var/app && \
     ln -s / /snap/core${SNAP_CORE_YEAR}/current && \
     ln -s /app /snap/radare2/current
 
@@ -29,6 +29,15 @@ USER r2
 WORKDIR /home/r2
 
 ENV HOME="/home/r2" \
-    PATH="/app/usr/bin:/app/bin:$PATH" \
+    PATH="/app/usr/bin:/app/bin:${PATH}" \
     R2_PREFIX="/app/usr" \
-    SLEIGHHOME="/app/usr/lib/radare2/last"
+    SLEIGHHOME="/app/usr/lib/radare2/last" \
+    SNAP="/app" \
+    SNAP_NAME="radare2" \
+    SNAP_VERSION="${R2_VERSION}" \
+    SNAP_REAL_HOME="/home/r2" \
+    SNAP_USER_DATA="/home/r2" \
+    SNAP_USER_COMMON="/home/r2" \
+    SNAP_DATA="/var/app" \
+    SNAP_COMMON="/var/app"
+
