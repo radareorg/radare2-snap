@@ -9,6 +9,7 @@
 
 SNAP_CORE_YEAR?=$(shell awk '/^base:/{sub(/core/,"",$$2); print $$2}' "snap/snapcraft.yaml")
 R2_VERSION?=$(shell awk '/^version:/{gsub(/['\''"]/,"",$$2); print $$2}' "snap/snapcraft.yaml")
+DOCKER_REPO?=radare2
 
 .PHONY: all snap docker all-multiarch snap-multiarch docker-multiarch clean
 
@@ -18,19 +19,24 @@ all-multiarch: snap-multiarch docker-multiarch
 snap:
 	$(eval DEB_HOST_ARCH?=$(shell dpkg-architecture -qDEB_HOST_ARCH || dpkg --print-architecture || docker run --rm "ubuntu:$(SNAP_CORE_YEAR).04" dpkg --print-architecture))
 	snapcraft --build-for=$(DEB_HOST_ARCH)
-
-docker/files/host:
 	mkdir -p docker/files
+	-rm -f docker/files/radare2__host.snap
+	ln -fs "../../radare2_$(R2_VERSION)_$(DEB_HOST_ARCH).snap" "docker/files/radare2__host.snap"
+
+docker/files/radare2__host.snap:
 	snap download --target-directory="docker/files/" --basename="radare2__host" radare2
+
+docker/files/host: docker/files/radare2__host.snap
 	unsquashfs -dest "docker/files/host" -excludes "docker/files/radare2__host.snap" meta snap
 
 docker: docker/files/host
+	$(eval R2_VERSION_HOST?=$(shell readlink docker/files/host/usr/share/radare2/last))
 	docker build \
 		--build-arg SNAP_CORE_YEAR=$(SNAP_CORE_YEAR) \
-		--build-arg R2_VERSION=$(shell readlink docker/files/host/usr/share/radare2/last) \
+		--build-arg R2_VERSION=$(R2_VERSION_HOST) \
 		--build-arg TARGETARCH=host \
-		--build-arg IMAGEREFNAME=radare2 \
-		--tag radare2:latest \
+		--tag "$(DOCKER_REPO):latest" \
+		--tag "$(DOCKER_REPO):$(R2_VERSION_HOST)" \
 		docker
 
 snap-multiarch:
@@ -43,9 +49,9 @@ docker/files/.docker-multiarch:
 
 docker-multiarch: docker/files/.docker-multiarch
 	cd docker && \
-		SNAP_CORE_YEAR=$(SNAP_CORE_YEAR) R2_VERSION=$(R2_VERSION) REPO="radare2" \
+		REPO=$(DOCKER_REPO) R2_VERSION=$(R2_VERSION) SNAP_CORE_YEAR=$(SNAP_CORE_YEAR) \
 		docker buildx bake --pull --load
 
 clean:
 	-rm -Rf *.snap docker/files
-	-docker rmi radare2:latest
+	-docker rmi $(DOCKER_REPO):latest $(DOCKER_REPO):$(R2_VERSION)
