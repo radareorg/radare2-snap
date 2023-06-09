@@ -16,6 +16,7 @@ jobs:
       name: snapcraft.io
       url: https://snapcraft.io/radare2
     strategy:
+      fail-fast: false
       matrix:
         arch: [amd64, arm64, armhf, ppc64el, riscv64, s390x]
     steps:
