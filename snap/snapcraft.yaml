@@ -64,6 +64,12 @@ architectures:
     build-for: arm64
   - build-on: [armhf, arm64, amd64]
     build-for: armhf
+  - build-on: [ppc64el, amd64, arm64]
+    build-for: ppc64el
+  - build-on: [riscv64, amd64, arm64]
+    build-for: riscv64
+  - build-on: [s390x, amd64, arm64]
+    build-for: s390x
 build-packages:
   - pkg-config
   - curl

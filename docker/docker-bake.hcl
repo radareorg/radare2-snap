@@ -15,7 +15,7 @@ variable "SNAP_CORE_YEAR" {
 }
 
 target "ubuntu" {
-	platforms = ["linux/amd64", "linux/arm64", "linux/arm/v7"]
+	platforms = ["linux/amd64", "linux/arm64", "linux/arm/v7", "linux/ppc64le", "linux/s390x"]
 	dockerfile = "Dockerfile"
 
 	args = {

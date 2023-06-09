@@ -19,6 +19,8 @@ for SNAP_FILE in *.snap; do
 
   if [ "$TARGETARCH" = "armhf" ]; then
     TARGETARCH="arm"
+  elif [ "$TARGETARCH" = "ppc64el" ]; then
+    TARGETARCH="ppc64le"
   fi
 
   echo "Uncompressing ${TARGETARCH} files for radare2 version ${R2_VERSION}..."
