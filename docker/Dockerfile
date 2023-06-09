@@ -1,5 +1,16 @@
 ARG SNAP_CORE_YEAR
 FROM ubuntu:"${SNAP_CORE_YEAR}.04"
+ARG IMAGEREFNAME
+ARG R2_VERSION
+
+LABEL org.opencontainers.image.title="radare2" \
+      org.opencontainers.image.description="UNIX-like reverse engineering framework and command-line toolset" \
+      org.opencontainers.image.ref.name="${IMAGEREFNAME}" \
+      org.opencontainers.image.version="${R2_VERSION}" \
+      org.opencontainers.image.vendor="radareorg" \
+      org.opencontainers.image.licenses="LGPL-3.0-only" \
+      org.opencontainers.image.url="https://www.radare.org/" \
+      org.opencontainers.image.source="https://github.com/radareorg/radare2-snap"
 
 # Replicate snap structure and create non-root user
 ARG SNAP_CORE_YEAR
@@ -19,8 +30,6 @@ COPY "files/${TARGETARCH}" /app
 # Initialise base user
 USER r2
 WORKDIR /home/r2
-
-ARG R2_VERSION
 ENV HOME="/home/r2" \
     PATH="/app/usr/bin:/app/bin:${PATH}" \
     R2_PREFIX="/app/usr" \

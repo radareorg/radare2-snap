@@ -33,6 +33,7 @@ docker: docker/files/host
 	$(eval R2_VERSION_HOST?=$(shell readlink docker/files/host/usr/share/radare2/last))
 	docker build \
 		--build-arg SNAP_CORE_YEAR=$(SNAP_CORE_YEAR) \
+		--build-arg IMAGEREFNAME=$(DOCKER_REPO) \
 		--build-arg R2_VERSION=$(R2_VERSION_HOST) \
 		--build-arg TARGETARCH=host \
 		--tag "$(DOCKER_REPO):latest" \
