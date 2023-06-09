@@ -1,16 +1,5 @@
 ARG SNAP_CORE_YEAR
 FROM ubuntu:"${SNAP_CORE_YEAR}.04"
-ARG IMAGEREFNAME
-ARG R2_VERSION
-
-LABEL org.opencontainers.image.title="radare2" \
-      org.opencontainers.image.description="UNIX-like reverse engineering framework and command-line toolset" \
-      org.opencontainers.image.ref.name="${IMAGEREFNAME}" \
-      org.opencontainers.image.version="${R2_VERSION}" \
-      org.opencontainers.image.vendor="radareorg" \
-      org.opencontainers.image.licenses="LGPL-3.0-only" \
-      org.opencontainers.image.url="https://www.radare.org/" \
-      org.opencontainers.image.source="https://github.com/radareorg/radare2-snap"
 
 # Replicate snap structure and create non-root user
 ARG SNAP_CORE_YEAR
@@ -22,6 +11,18 @@ RUN mkdir -p "/snap/core${SNAP_CORE_YEAR}" "/snap/radare2" "/var/snap/radare2" "
     useradd -m r2 && \
     adduser r2 sudo && \
     echo "r2:r2" | chpasswd
+
+# Add image labels
+ARG IMAGEREFNAME
+ARG R2_VERSION
+LABEL org.opencontainers.image.title="radare2" \
+      org.opencontainers.image.description="UNIX-like reverse engineering framework and command-line toolset" \
+      org.opencontainers.image.ref.name="${IMAGEREFNAME}" \
+      org.opencontainers.image.version="${R2_VERSION}" \
+      org.opencontainers.image.vendor="radareorg" \
+      org.opencontainers.image.licenses="LGPL-3.0-only" \
+      org.opencontainers.image.url="https://www.radare.org/" \
+      org.opencontainers.image.source="https://github.com/radareorg/radare2-snap"
 
 # Copy uncompressed snap files into /app
 ARG TARGETARCH
