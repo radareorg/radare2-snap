@@ -81,16 +81,9 @@ jobs:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
-      - name: Build docker images
+      - name: Build and push docker images
         env:
           SNAP_CORE_YEAR: ${{ steps.extract.outputs.snap_core_year }}
           R2_VERSION: ${{ steps.extract.outputs.r2_version }}
         working-directory: docker
-        run: docker buildx bake --pull
-
-      - name: Push docker images
-        env:
-          SNAP_CORE_YEAR: ${{ steps.extract.outputs.snap_core_year }}
-          R2_VERSION: ${{ steps.extract.outputs.r2_version }}
-        working-directory: docker
-        run: docker buildx bake --push
+        run: docker buildx bake --pull --push
