@@ -12,8 +12,7 @@ RUN mkdir -p "/snap/core${SNAP_CORE_YEAR}" "/snap/radare2" "/var/snap/radare2" "
     apt-get install -y sudo && \
     rm -rf /var/lib/apt/lists/* && \
     useradd -m r2 && \
-    adduser r2 sudo && \
-    echo "r2:r2" | chpasswd
+    echo "r2 ALL=(ALL) NOPASSWD:ALL" > /etc/sudoers.d/r2
 
 # Add image labels
 ARG IMAGEREFNAME
