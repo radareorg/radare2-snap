@@ -36,7 +36,7 @@ jobs:
       # Commit changed file back to the repository
       - name: Commit changes
         id: commit
-        uses: stefanzweifel/git-auto-commit-action@v4
+        uses: stefanzweifel/git-auto-commit-action@3ea6ae190baf489ba007f7c92608f33ce20ef04a
         with:
           commit_message: Automatic update versions
           #commit_user_name: 'github-actions[bot]'
