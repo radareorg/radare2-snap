@@ -18,7 +18,13 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        arch: [amd64, arm64, armhf, ppc64el, riscv64, s390x]
+        arch:
+          - amd64
+          - arm64
+          - armhf
+          - ppc64el
+          - riscv64
+          - s390x
     steps:
       # Perform the checkout of the main branch
       - name: Checkout
@@ -88,11 +94,16 @@ jobs:
           pull: true
           push: true
           context: docker
-          platforms: ["linux/amd64", "linux/arm64", "linux/arm/v7", "linux/ppc64le", "linux/s390x"]
-          build-args:
-            - IMAGEREFNAME=radare/radare2
-            - SNAP_CORE_YEAR=${{ steps.extract.outputs.snap_core_year }}
-            - R2_VERSION=${{ steps.extract.outputs.r2_version }}
-          tags:
-            - radare/radare2:latest
-            - radare/radare2:${{ steps.extract.outputs.r2_version }}
+          platforms: |
+            linux/amd64
+            linux/arm64
+            linux/arm/v7
+            linux/ppc64le
+            linux/s390x
+          build-args: |
+            IMAGEREFNAME=radare/radare2
+            SNAP_CORE_YEAR=${{ steps.extract.outputs.snap_core_year }}
+            R2_VERSION=${{ steps.extract.outputs.r2_version }}
+          tags: |
+            radare/radare2:latest
+            radare/radare2:${{ steps.extract.outputs.r2_version }}
