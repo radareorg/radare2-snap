@@ -10,20 +10,25 @@ echo "Clean old docker temporal files..."
 rm -fR "docker/files"
 mkdir -p "docker/files"
 
-for SNAP_FILE in *.snap; do
+for SNAP_FILE in radare2_*.snap; do
   echo "Evaluating: ${SNAP_FILE}"
   SNAP_BASE=${SNAP_FILE%.snap}
-  TARGETARCH=${SNAP_BASE##*_}
+  SNAP_ARCH=${SNAP_BASE##*_}
   RT=${SNAP_BASE%_*}
-  R2_VERSION=${RT#*_}
+  SNAP_VERSION=${RT#*_}
 
-  if [ "$TARGETARCH" = "armhf" ]; then
-    TARGETARCH="arm"
-  elif [ "$TARGETARCH" = "ppc64el" ]; then
-    TARGETARCH="ppc64le"
+  case "$SNAP_ARCH" in
+    armhf)    TARGETARCH="arm";;
+    ppc64el)  TARGETARCH="ppc64le";;
+    i386)     TARGETARCH="386";;
+    *)        TARGETARCH=${SNAP_ARCH};;
+  esac
+
+  if [ "${SNAP_VERSION}" != "latest" ]; then
+    R2_VERSION=${SNAP_VERSION}
   fi
 
-  echo "Uncompressing ${TARGETARCH} files for radare2 version ${R2_VERSION}..."
+  echo "Uncompressing ${TARGETARCH} files for radare2 version ${SNAP_VERSION}..."
   unsquashfs -no-progress -dest "docker/files/${TARGETARCH}" -excludes "${SNAP_FILE}" meta snap
   echo
 done

@@ -1,33 +1,30 @@
 # Makefile used only for local development tests
 
 # This can be used to emulate the full build for a single arch (target: all)
-# to perform a full build locally (target: all-multiarch)
-# or to emulate only some parts of the process (targets: snap docker snap-multiarch docker-multiarch)
+# or to emulate only some part of the process (targets: snap snap-multiarch docker)
 
 # To use this makefile is required to have installed localy:
-#  snap, snapcraft, squashfs-tools, docker, docker-buildx
+#  snap, snapcraft, squashfs-tools, docker, gh, yq (mikefarah)
 
 SNAP_CORE_YEAR?=$(shell awk '/^base:/{sub(/core/,"",$$2); print $$2}' "snap/snapcraft.yaml")
 R2_VERSION?=$(shell awk '/^version:/{gsub(/['\''"]/,"",$$2); print $$2}' "snap/snapcraft.yaml")
+DEB_HOST_ARCH?=$(shell dpkg-architecture -qDEB_HOST_ARCH || dpkg --print-architecture || docker run --rm "ubuntu:$(SNAP_CORE_YEAR).04" dpkg --print-architecture)
 DOCKER_REPO?=radare2
 
-.PHONY: all snap docker all-multiarch snap-multiarch docker-multiarch clean
+.PHONY: all snap docker snap-multiarch download-snapcraft download-github update clean
 
 all: snap docker
-all-multiarch: snap-multiarch docker-multiarch
 
 snap:
-	$(eval DEB_HOST_ARCH?=$(shell dpkg-architecture -qDEB_HOST_ARCH || dpkg --print-architecture || docker run --rm "ubuntu:$(SNAP_CORE_YEAR).04" dpkg --print-architecture))
 	snapcraft --build-for=$(DEB_HOST_ARCH)
+	ln -fs "radare2_$(R2_VERSION)_$(DEB_HOST_ARCH).snap" "radare2_latest_host.snap"
+
+radare2_latest_host.snap:
+	make download-snapcraft || make download-github || make snap
+
+docker/files/host: | radare2_latest_host.snap
 	mkdir -p docker/files
-	-rm -f docker/files/radare2__host.snap
-	ln -fs "../../radare2_$(R2_VERSION)_$(DEB_HOST_ARCH).snap" "docker/files/radare2__host.snap"
-
-docker/files/radare2__host.snap:
-	snap download --target-directory="docker/files/" --basename="radare2__host" radare2
-
-docker/files/host: docker/files/radare2__host.snap
-	unsquashfs -dest "docker/files/host" -excludes "docker/files/radare2__host.snap" meta snap
+	unsquashfs -dest "$@" -excludes "radare2_latest_host.snap" meta snap
 
 docker: docker/files/host
 	$(eval R2_VERSION_HOST?=$(shell readlink docker/files/host/usr/share/radare2/last))
@@ -37,22 +34,23 @@ docker: docker/files/host
 		--build-arg R2_VERSION=$(R2_VERSION_HOST) \
 		--build-arg TARGETARCH=host \
 		--tag "$(DOCKER_REPO):latest" \
-		--tag "$(DOCKER_REPO):$(R2_VERSION_HOST)" \
 		docker
 
 snap-multiarch:
 	snapcraft
-	-rm -f docker/files/.docker-multiarch
 
-docker/files/.docker-multiarch:
-	.github/scripts/extract-docker-files.sh
-	touch docker/files/.docker-multiarch
+download-snapcraft:
+	snap download --basename="radare2-latest-host" radare2
 
-docker-multiarch: docker/files/.docker-multiarch
-	cd docker && \
-		REPO=$(DOCKER_REPO) R2_VERSION=$(R2_VERSION) SNAP_CORE_YEAR=$(SNAP_CORE_YEAR) \
-		docker buildx bake --pull --load
+download-github:
+	$(eval GH_RUN_DB_ID?=$(shell gh run list --workflow "Build images" --limit 1 --json "databaseId" --jq '.[].databaseId'))	
+	gh run download $(GH_RUN_DB_ID) -n snaps
+	ln -fs "radare2_$(R2_VERSION)_$(DEB_HOST_ARCH).snap" "radare2_latest_host.snap"
+
+update:
+	.github/scripts/update-versions.sh
+	-git status
 
 clean:
 	-rm -Rf *.snap docker/files
-	-docker rmi $(DOCKER_REPO):latest $(DOCKER_REPO):$(R2_VERSION)
+	-docker rmi $(DOCKER_REPO):latest
