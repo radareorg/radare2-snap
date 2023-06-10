@@ -8,6 +8,9 @@ RUN mkdir -p "/snap/core${SNAP_CORE_YEAR}" "/snap/radare2" "/var/snap/radare2" "
     ln -s "/app" "/snap/radare2/current" && \
     ln -s "/var/app" "/var/snap/radare2/current" && \
     ln -s "/var/app" "/var/snap/radare2/common" && \
+    apt-get update && \
+    apt-get install -y sudo && \
+    rm -rf /var/lib/apt/lists/* && \
     useradd -m r2 && \
     adduser r2 sudo && \
     echo "r2:r2" | chpasswd
