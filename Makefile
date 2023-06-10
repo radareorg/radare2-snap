@@ -8,14 +8,13 @@
 
 SNAP_CORE_YEAR?=$(shell awk '/^base:/{sub(/core/,"",$$2); print $$2}' "snap/snapcraft.yaml")
 R2_VERSION?=$(shell awk '/^version:/{gsub(/['\''"]/,"",$$2); print $$2}' "snap/snapcraft.yaml")
-DEB_HOST_ARCH?=$(shell dpkg-architecture -qDEB_HOST_ARCH || dpkg --print-architecture || docker run --rm "ubuntu:$(SNAP_CORE_YEAR).04" dpkg --print-architecture)
 DOCKER_REPO?=radare2
 
-.PHONY: all snap docker snap-multiarch download-snapcraft download-github update clean
+.PHONY: all snap docker snap-multiarch download-snapcraft download-github update clean deb_host_arch
 
 all: snap docker
 
-snap:
+snap: deb_host_arch
 	snapcraft --build-for=$(DEB_HOST_ARCH)
 	ln -fs "radare2_$(R2_VERSION)_$(DEB_HOST_ARCH).snap" "radare2_latest_host.snap"
 
@@ -40,10 +39,10 @@ snap-multiarch:
 	snapcraft
 
 download-snapcraft:
-	snap download --basename="radare2-latest-host" radare2
+	snap download --basename="radare2_latest_host" radare2
 
-download-github:
-	$(eval GH_RUN_DB_ID?=$(shell gh run list --workflow "Build images" --limit 1 --json "databaseId" --jq '.[].databaseId'))	
+download-github: deb_host_arch
+	$(eval GH_RUN_DB_ID?=$(shell gh run list --workflow "Build images" --status completed --limit 1 --json "databaseId" --jq '.[].databaseId'))	
 	gh run download $(GH_RUN_DB_ID) -n snaps
 	ln -fs "radare2_$(R2_VERSION)_$(DEB_HOST_ARCH).snap" "radare2_latest_host.snap"
 
@@ -54,3 +53,6 @@ update:
 clean:
 	-rm -Rf *.snap docker/files
 	-docker rmi $(DOCKER_REPO):latest
+
+deb_host_arch:
+	$(eval DEB_HOST_ARCH?=$(shell dpkg-architecture -qDEB_HOST_ARCH || dpkg --print-architecture || docker run --rm "ubuntu:$(SNAP_CORE_YEAR).04" dpkg --print-architecture))
