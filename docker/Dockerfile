@@ -1,4 +1,3 @@
-ARG BUILDPLATFORM
 ARG BASE_IMAGE
 
 # Start the builder stage running as native
