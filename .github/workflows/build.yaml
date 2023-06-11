@@ -58,7 +58,7 @@ jobs:
     runs-on: ubuntu-latest
     environment:
       name: docker.io
-      url: https://hub.docker.com/r/radare/radare2
+      url: https://hub.docker.com/r/${{ vars.DOCKERHUB_REPO }}
     steps:
       # Perform the checkout of the main branch
       - name: Checkout
@@ -72,9 +72,9 @@ jobs:
           name: snaps
           path: '.'
 
-      - name: Extract artifacts
-        id: extract
-        run: .github/scripts/extract-docker-files.sh
+      - name: Map artifacts to docker files
+        id: map
+        run: .github/scripts/map-docker-files.sh
 
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v2
@@ -101,9 +101,9 @@ jobs:
             linux/ppc64le
             linux/s390x
           build-args: |
-            IMAGEREFNAME=radare/radare2
-            SNAP_CORE_YEAR=${{ steps.extract.outputs.snap_core_year }}
-            R2_VERSION=${{ steps.extract.outputs.r2_version }}
+            BASE_IMAGE=${{ steps.map.outputs.base_image }}
+            SNAP_BASE=${{ steps.map.outputs.snap_base }}
+            R2_VERSION=${{ steps.map.outputs.r2_version }}
           tags: |
-            radare/radare2:latest
-            radare/radare2:${{ steps.extract.outputs.r2_version }}
+            ${{ vars.DOCKERHUB_REPO }}:latest
+            ${{ vars.DOCKERHUB_REPO }}:${{ steps.map.outputs.r2_version }}

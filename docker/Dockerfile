@@ -1,10 +1,18 @@
-ARG SNAP_CORE_YEAR
-FROM ubuntu:"${SNAP_CORE_YEAR}.04"
+FROM --platform=$BUILDPLATFORM alpine:3.18 AS builder
+
+RUN apk add --no-cache squashfs-tools
+
+ARG TARGETARCH
+COPY "files/radare2-${TARGETARCH}.sqsh" /tmp/radare2.sqsh
+RUN mkdir /target && unsquashfs -no-progress -dest "/target/app" -excludes "/tmp/radare2.sqsh" meta snap
+
+ARG BASE_IMAGE
+FROM ${BASE_IMAGE}
 
 # Replicate snap structure and create non-root user
-ARG SNAP_CORE_YEAR
-RUN mkdir -p "/snap/core${SNAP_CORE_YEAR}" "/snap/radare2" "/var/snap/radare2" "/var/app" && \
-    ln -s "/" "/snap/core${SNAP_CORE_YEAR}/current" && \
+ARG SNAP_BASE
+RUN mkdir -p "/snap/${SNAP_BASE}" "/snap/radare2" "/var/snap/radare2" "/var/app" && \
+    ln -s "/" "/snap/${SNAP_BASE}/current" && \
     ln -s "/app" "/snap/radare2/current" && \
     ln -s "/var/app" "/var/snap/radare2/current" && \
     ln -s "/var/app" "/var/snap/radare2/common" && \
@@ -15,11 +23,10 @@ RUN mkdir -p "/snap/core${SNAP_CORE_YEAR}" "/snap/radare2" "/var/snap/radare2" "
     echo "r2 ALL=(ALL) NOPASSWD:ALL" > /etc/sudoers.d/r2
 
 # Add image labels
-ARG IMAGEREFNAME
 ARG R2_VERSION
 LABEL org.opencontainers.image.title="radare2" \
       org.opencontainers.image.description="UNIX-like reverse engineering framework and command-line toolset" \
-      org.opencontainers.image.ref.name="${IMAGEREFNAME}" \
+      org.opencontainers.image.ref.name="radare/radare2" \
       org.opencontainers.image.version="${R2_VERSION}" \
       org.opencontainers.image.vendor="radareorg" \
       org.opencontainers.image.licenses="LGPL-3.0-only" \
@@ -27,8 +34,7 @@ LABEL org.opencontainers.image.title="radare2" \
       org.opencontainers.image.source="https://github.com/radareorg/radare2-snap"
 
 # Copy uncompressed snap files into /app
-ARG TARGETARCH
-COPY "files/${TARGETARCH}" /app
+COPY --from=builder /target/app /app
 
 # Initialise base user
 USER r2
