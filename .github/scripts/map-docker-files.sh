@@ -34,10 +34,9 @@ R2_VERSION=$(awk '/^version:/{gsub(/['\''"]/,"",$2);print $2;exit}' "${SNAP_META
 rm -f "${SNAP_METADATA_FILE}"
 
 BASE_IMAGE="ubuntu:${BASE_SNAP#core}.04"
-echo "To build use the following docker build args: BASE_IMAGE=${BASE_IMAGE} BASE_SNAP=${BASE_SNAP} R2_VERSION=${R2_VERSION}"
+echo "To build use the following docker build args: BASE_IMAGE=${BASE_IMAGE} R2_VERSION=${R2_VERSION}"
 
 if [ -n "$GITHUB_OUTPUT" ]; then
   echo "base_image=${BASE_IMAGE}" >> "$GITHUB_OUTPUT"
-  echo "base_snap=${BASE_SNAP}" >> "$GITHUB_OUTPUT"
   echo "r2_version=${R2_VERSION}" >> "$GITHUB_OUTPUT"
 fi

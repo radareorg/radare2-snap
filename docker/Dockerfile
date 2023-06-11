@@ -1,31 +1,37 @@
-FROM --platform=$BUILDPLATFORM alpine:3.18 AS builder
+ARG BUILDPLATFORM
+ARG BASE_IMAGE
+
+# Start the builder stage running as native
+FROM --platform=$BUILDPLATFORM "alpine:3.18" as builder
 
 RUN apk add --no-cache squashfs-tools yq
 
-COPY "command.sh" /target/snap/bin/radare2
-
+# Uncompress snap to /target/app
 ARG TARGETARCH
 COPY "files/radare2-${TARGETARCH}.sqsh" /tmp/radare2.sqsh
+RUN mkdir /target && \
+    unsquashfs -no-progress -dest "/target/app" -excludes "/tmp/radare2.sqsh" snap && \
+    mv /target/app/meta /tmp/
 
-RUN unsquashfs -no-progress -dest "/target/app" -excludes "/tmp/radare2.sqsh" meta snap
+# Replicate snap structure
+RUN set -ex; BASE_SNAP=$(yq eval -o t .base /tmp/meta/snap.yaml); \
+    mkdir -p "/target/snap/${BASE_SNAP}" "/target/snap/radare2" "/target/var/snap/radare2" "/target/var/app"; \
+    ln -s "/" "/target/snap/${BASE_SNAP}/current"; \
+    ln -s "/app" "/target/snap/radare2/current"; \
+    ln -s "/var/app" "/target/var/snap/radare2/current"; \
+    ln -s "/var/app" "/target/var/snap/radare2/common"
 
+# Create snap external command aliases
+COPY "command.sh" /target/snap/bin/radare2
 RUN set -ex; \
-    for cmd in $(sqfscat "/tmp/radare2.sqsh" meta/snap.yaml | \
-            yq eval -o t '.apps | keys | .[] | select(. != "radare2")'); do \
-        ln -s "radare2" "/target/snap/bin/radare2.$cmd"; \
-    done;
+    for cmd in $(yq eval -o t '.apps | keys | .[] | select(. != "radare2")' /tmp/meta/snap.yaml); \
+    do ln -s "radare2" "/target/snap/bin/radare2.$cmd"; done
 
-ARG BASE_IMAGE
-FROM ${BASE_IMAGE}
+# Start the final image stage
+FROM "${BASE_IMAGE}" as radare2
 
-# Replicate snap structure and create non-root user
-ARG BASE_SNAP
-RUN mkdir -p "/snap/${BASE_SNAP}" "/snap/radare2" "/var/snap/radare2" "/var/app" && \
-    ln -s "/" "/snap/${BASE_SNAP}/current" && \
-    ln -s "/app" "/snap/radare2/current" && \
-    ln -s "/var/app" "/var/snap/radare2/current" && \
-    ln -s "/var/app" "/var/snap/radare2/common" && \
-    apt-get update && \
+# Create non-root user
+RUN apt-get update && \
     apt-get install -y sudo && \
     rm -rf /var/lib/apt/lists/* && \
     useradd -m r2 && \

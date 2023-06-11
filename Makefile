@@ -7,8 +7,9 @@
 #  snap, snapcraft, squashfs-tools, docker, gh, yq (mikefarah)
 
 DEB_HOST_ARCH?=$(shell type -p dpkg-architecture > /dev/null && dpkg-architecture -qDEB_HOST_ARCH || uname -m | sed -e 's,i[0-9]86,i386,g' -e 's,x86_64,amd64,g' -e 's,armv.*,armhf,g' -e 's,aarch64,arm64,g' -e 's,ppc.+64le,ppc64el,g')
-TARGETARCH?=$(shell uname -m | sed -e 's,i[0-9]86,386,g' -e 's,x86_64,amd64,g' -e 's,armv.*,arm,g' -e 's,aarch64,arm64,g' -e 's,ppc.+64le,ppc64le,g')
 DEB_BUILD_ARCH?=$(shell type -p dpkg-architecture > /dev/null && dpkg-architecture -qDEB_BUILD_ARCH || echo $(DEB_HOST_ARCH))
+TARGETARCH?=$(shell uname -m | sed -e 's,i[0-9]86,386,g' -e 's,x86_64,amd64,g' -e 's,armv.*,arm,g' -e 's,aarch64,arm64,g' -e 's,ppc.+64le,ppc64le,g')
+BUILDPLATFORM?=linux/$(TARGETARCH)
 DOCKER_REPO?=radare2
 
 .PHONY: all snap snap-multiarch docker update map-docker-files clean \
@@ -26,9 +27,9 @@ docker: docker/Dockerfile docker/files/radare2-$(TARGETARCH).sqsh docker/files/r
 	$(eval BASE_SNAP?=$(shell awk '/^base:/{print $$2;exit}' docker/files/radare2-$(TARGETARCH).snap.yaml))
 	$(eval BASE_IMAGE?=ubuntu:$(BASE_SNAP:core%=%).04)
 	docker build \
+		--build-arg BUILDPLATFORM=$(BUILDPLATFORM) \
 		--build-arg TARGETARCH=$(TARGETARCH) \
 		--build-arg BASE_IMAGE=$(BASE_IMAGE) \
-		--build-arg BASE_SNAP=$(BASE_SNAP) \
 		--build-arg R2_VERSION=$(R2_VERSION) \
 		--tag "$(DOCKER_REPO):latest" \
 		docker
@@ -60,7 +61,7 @@ link-git-version-sqsh:
 
 # Helpers to speedup docker tests that downloads the snap if possible
 docker/files/radare2-$(TARGETARCH).sqsh:
-	make $(shell type -p snap > /dev/null && echo download-snapcraft || type -p gh > /dev/null && echo download-github || echo snap) \
+	make $(shell (which snap > /dev/null && echo download-snapcraft) || (which gh > /dev/null && echo download-github) || echo snap) \
 		DEB_BUILD_ARCH=$(DEB_BUILD_ARCH) \
 		TARGETARCH=$(TARGETARCH)
 
