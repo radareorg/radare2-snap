@@ -7,6 +7,7 @@ on:
       - 'main'
     paths:
       - 'snap/**'
+      - 'alternative/nofrida/snap/**'
       - 'docker/**'
 
 jobs:
@@ -18,13 +19,21 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        arch:
-          - amd64
-          - arm64
-        # - armhf
-        # - ppc64el
-        # - riscv64
-        # - s390x
+        cfg:
+          - arch: amd64
+            path: .
+          - arch: arm64
+            path: .
+        # Issue building frida on armhf (temporally disabled)
+          - arch: armhf
+            path: alternative/nofrida/
+        # platforms without frida supported
+          - arch: ppc64el
+            path: alternative/nofrida/
+          # - arch: riscv64
+          #   path: alternative/nofrida/
+          # - arch: s390x
+          #   path: alternative/nofrida/
     steps:
       # Perform the checkout of the main branch
       - name: Checkout
@@ -39,7 +48,8 @@ jobs:
         id: build
         uses: diddlesnaps/snapcraft-multiarch-action@93ebbb5ce6d1ab2078c201dd38cf1697666404ca
         with:
-          architecture: ${{ matrix.arch }}
+          architecture: ${{ matrix.cfg.arch }}
+          path: ${{ matrix.cfg.path }}
 
       - name: Upload artifact
         uses: actions/upload-artifact@v3
@@ -100,8 +110,8 @@ jobs:
           platforms: |
             linux/amd64
             linux/arm64
-          # linux/arm/v7
-          # linux/ppc64le
+            linux/arm/v7
+            linux/ppc64le
           # linux/riscv64
           # linux/s390x
           build-args: |

@@ -64,6 +64,12 @@ architectures:
     build-for: arm64
   - build-on: [armhf]
     build-for: armhf
+  - build-on: [ppc64el]
+    build-for: ppc64el
+  - build-on: [riscv64]
+    build-for: riscv64
+  - build-on: [s390x]
+    build-for: s390x
 build-packages:
   - pkg-config
   - curl
@@ -100,22 +106,6 @@ parts:
     override-pull: |
       craftctl default
       ./preconfigure
-    autotools-configure-parameters:
-      - --prefix=/usr
-      - --with-checks-level=0
-  r2frida:
-    after:
-      - radare2
-    plugin: autotools
-    source: https://github.com/nowsecure/r2frida.git
-    source-type: git
-    source-depth: 1
-    source-tag: '5.8.8'
-    build-attributes:
-      - enable-patchelf
-    build-environment:
-      - CFLAGS: "${CFLAGS:+} -O3"
-      - LD_LIBRARY_PATH: "$CRAFT_STAGE/usr/lib${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}"
     autotools-configure-parameters:
       - --prefix=/usr
       - --with-checks-level=0
