@@ -47,7 +47,7 @@ clean:
 
 # Helpers to build snap
 build-snap: snap/snapcraft.yaml
-	snapcraft --build-for=$(DEB_BUILD_ARCH)
+	SNAPCRAFT_BUILD_FOR=$(DEB_BUILD_ARCH) snapcraft
 
 build-snap-multiarch: snap/snapcraft.yaml
 	snapcraft

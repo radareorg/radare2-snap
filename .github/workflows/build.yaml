@@ -23,7 +23,6 @@ jobs:
           - arm64
           - armhf
           - ppc64el
-          - riscv64
           - s390x
     steps:
       # Perform the checkout of the main branch
@@ -32,11 +31,14 @@ jobs:
         with:
           ref: main
 
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v2
+
       - name: Build snap
         id: build
-        uses: snapcore/action-build@v1
+        uses: diddlesnaps/snapcraft-multiarch-action@93ebbb5ce6d1ab2078c201dd38cf1697666404ca
         with:
-          snapcraft-args: --build-for=${{ matrix.arch }}
+          architecture: ${{ matrix.arch }}
 
       - name: Upload artifact
         uses: actions/upload-artifact@v3
