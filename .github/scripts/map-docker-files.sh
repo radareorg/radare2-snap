@@ -29,15 +29,15 @@ done
 SNAP_METADATA_FILE=$(mktemp)
 echo "Extracting metadata from ${SNAP_FILE} to ${SNAP_METADATA_FILE}..."
 sqfscat "${SNAP_FILE}" meta/snap.yaml > "${SNAP_METADATA_FILE}"
-SNAP_BASE=$(awk '/^base:/{print $2;exit}' "${SNAP_METADATA_FILE}")
+BASE_SNAP=$(awk '/^base:/{print $2;exit}' "${SNAP_METADATA_FILE}")
 R2_VERSION=$(awk '/^version:/{gsub(/['\''"]/,"",$2);print $2;exit}' "${SNAP_METADATA_FILE}")
 rm -f "${SNAP_METADATA_FILE}"
 
-BASE_IMAGE="ubuntu:${SNAP_BASE#core}.04"
-echo "To build use the following docker build args: BASE_IMAGE=${BASE_IMAGE} SNAP_BASE=${SNAP_BASE} R2_VERSION=${R2_VERSION}"
+BASE_IMAGE="ubuntu:${BASE_SNAP#core}.04"
+echo "To build use the following docker build args: BASE_IMAGE=${BASE_IMAGE} BASE_SNAP=${BASE_SNAP} R2_VERSION=${R2_VERSION}"
 
 if [ -n "$GITHUB_OUTPUT" ]; then
   echo "base_image=${BASE_IMAGE}" >> "$GITHUB_OUTPUT"
-  echo "snap_base=${SNAP_BASE}" >> "$GITHUB_OUTPUT"
+  echo "base_snap=${BASE_SNAP}" >> "$GITHUB_OUTPUT"
   echo "r2_version=${R2_VERSION}" >> "$GITHUB_OUTPUT"
 fi

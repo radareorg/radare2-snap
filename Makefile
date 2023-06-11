@@ -22,13 +22,13 @@ snap: build-snap link-git-version-sqsh
 snap-multiarch: build-snap-multiarch link-git-version-sqsh
 
 docker: docker/Dockerfile docker/files/radare2-$(TARGETARCH).sqsh docker/files/radare2-$(TARGETARCH).snap.yaml
-	$(eval SNAP_BASE?=$(shell awk '/^base:/{print $$2;exit}' docker/files/radare2-$(TARGETARCH).snap.yaml))
 	$(eval R2_VERSION?=$(shell awk '/^version:/{gsub(/['\''"]/,"",$$2);print $$2;exit}' docker/files/radare2-$(TARGETARCH).snap.yaml))
-	$(eval BASE_IMAGE?=ubuntu:$(SNAP_BASE:core%=%).04)
+	$(eval BASE_SNAP?=$(shell awk '/^base:/{print $$2;exit}' docker/files/radare2-$(TARGETARCH).snap.yaml))
+	$(eval BASE_IMAGE?=ubuntu:$(BASE_SNAP:core%=%).04)
 	docker build \
 		--build-arg TARGETARCH=$(TARGETARCH) \
 		--build-arg BASE_IMAGE=$(BASE_IMAGE) \
-		--build-arg SNAP_BASE=$(SNAP_BASE) \
+		--build-arg BASE_SNAP=$(BASE_SNAP) \
 		--build-arg R2_VERSION=$(R2_VERSION) \
 		--tag "$(DOCKER_REPO):latest" \
 		docker

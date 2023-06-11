@@ -1,18 +1,27 @@
 FROM --platform=$BUILDPLATFORM alpine:3.18 AS builder
 
-RUN apk add --no-cache squashfs-tools
+RUN apk add --no-cache squashfs-tools yq
+
+COPY "command.sh" /target/snap/bin/radare2
 
 ARG TARGETARCH
 COPY "files/radare2-${TARGETARCH}.sqsh" /tmp/radare2.sqsh
-RUN mkdir /target && unsquashfs -no-progress -dest "/target/app" -excludes "/tmp/radare2.sqsh" meta snap
+
+RUN unsquashfs -no-progress -dest "/target/app" -excludes "/tmp/radare2.sqsh" meta snap
+
+RUN set -ex; \
+    for cmd in $(sqfscat "/tmp/radare2.sqsh" meta/snap.yaml | \
+            yq eval -o t '.apps | keys | .[] | select(. != "radare2")'); do \
+        ln -s "radare2" "/target/snap/bin/radare2.$cmd"; \
+    done;
 
 ARG BASE_IMAGE
 FROM ${BASE_IMAGE}
 
 # Replicate snap structure and create non-root user
-ARG SNAP_BASE
-RUN mkdir -p "/snap/${SNAP_BASE}" "/snap/radare2" "/var/snap/radare2" "/var/app" && \
-    ln -s "/" "/snap/${SNAP_BASE}/current" && \
+ARG BASE_SNAP
+RUN mkdir -p "/snap/${BASE_SNAP}" "/snap/radare2" "/var/snap/radare2" "/var/app" && \
+    ln -s "/" "/snap/${BASE_SNAP}/current" && \
     ln -s "/app" "/snap/radare2/current" && \
     ln -s "/var/app" "/var/snap/radare2/current" && \
     ln -s "/var/app" "/var/snap/radare2/common" && \
@@ -33,14 +42,14 @@ LABEL org.opencontainers.image.title="radare2" \
       org.opencontainers.image.url="https://www.radare.org/" \
       org.opencontainers.image.source="https://github.com/radareorg/radare2-snap"
 
-# Copy uncompressed snap files into /app
-COPY --from=builder /target/app /app
+# Copy uncompressed snap files
+COPY --from=builder /target /
 
 # Initialise base user
 USER r2
 WORKDIR /home/r2
 ENV HOME="/home/r2" \
-    PATH="/app/usr/bin:/app/bin:${PATH}" \
+    PATH="/app/usr/bin:/app/bin:/snap/bin:${PATH}" \
     R2_PREFIX="/app/usr" \
     SLEIGHHOME="/app/usr/lib/radare2/last" \
     SNAP="/app" \
