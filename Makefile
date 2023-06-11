@@ -14,7 +14,7 @@ DOCKER_REPO?=radare2
 
 .PHONY: all snap snap-multiarch docker update map-docker-files clean \
 	build-snap build-snap-multiarch link-git-version-sqsh \
-	download-snapcraft download-github download-github-artifacts
+	download-snapcraft download-github download-snapcraft-artifact download-github-artifacts
 
 all: snap docker
 
@@ -65,8 +65,10 @@ docker/files/radare2-$(TARGETARCH).sqsh:
 		DEB_BUILD_ARCH=$(DEB_BUILD_ARCH) \
 		TARGETARCH=$(TARGETARCH)
 
-download-snapcraft:
+download-snapcraft-artifact:
 	UBUNTU_STORE_ARCH=$(DEB_BUILD_ARCH) snap download --basename="radare2__$(DEB_BUILD_ARCH)" radare2
+
+download-snapcraft: download-snapcraft-artifact
 	$(eval R2_VERSION?=$(shell sqfscat "radare2__$(DEB_BUILD_ARCH).snap" meta/snap.yaml | awk '/^version:/{gsub(/['\''"]/,"",$$2);print $$2;exit}'))
 	mv "radare2__$(DEB_BUILD_ARCH).snap" "radare2_$(R2_VERSION)_$(DEB_BUILD_ARCH).snap"
 	mkdir -p docker/files
