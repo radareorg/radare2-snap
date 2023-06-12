@@ -26,10 +26,3 @@ yq eval -i '.version=strenv(R2_VERSION) |
   .parts.r2ghidra.source-tag=strenv(R2GHIDRA_VERSION) |
   .parts.r2dec.source-tag=strenv(R2DEC_VERSION)
   ' alternative/nofrida/snap/snapcraft.yaml
-
-echo "Updating versions in alternative/legacy/snap/snapcraft.yaml..." > /dev/stderr
-yq eval -i '.version=strenv(R2_VERSION) | 
-  .parts.r2ghidra.source-tag=strenv(R2GHIDRA_VERSION) |
-  .parts.r2frida.source-tag=strenv(R2FRIDA_VERSION) |
-  .parts.r2dec.source-tag=strenv(R2DEC_VERSION)
-  ' alternative/legacy/snap/snapcraft.yaml
