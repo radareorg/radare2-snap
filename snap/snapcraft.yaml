@@ -91,7 +91,7 @@ parts:
     source: https://github.com/radareorg/r2ghidra.git
     source-type: git
     source-depth: 1
-    source-tag: '5.8.4'
+    source-tag: '5.8.6'
     build-attributes:
       - enable-patchelf
     build-environment:
