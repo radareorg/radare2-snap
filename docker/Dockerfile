@@ -49,6 +49,7 @@ LABEL org.opencontainers.image.title="radare2" \
       org.opencontainers.image.source="https://github.com/radareorg/radare2-snap"
 
 # Copy uncompressed snap files
+ARG SNAP_ARCH
 COPY --from=builder /target /
 
 # Initialise base user
@@ -61,6 +62,7 @@ ENV HOME="/home/r2" \
     SNAP="/app" \
     SNAP_NAME="radare2" \
     SNAP_VERSION="${R2_VERSION}" \
+    SNAP_ARCH="${SNAP_ARCH}" \
     SNAP_REAL_HOME="/home/r2" \
     SNAP_USER_DATA="/home/r2" \
     SNAP_USER_COMMON="/home/r2" \

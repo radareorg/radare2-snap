@@ -27,6 +27,7 @@ docker: docker/Dockerfile docker/files/radare2-$(TARGETARCH).sqsh docker/files/r
 		--build-arg TARGETARCH=$(TARGETARCH) \
 		--build-arg BASE_IMAGE=$(BASE_IMAGE) \
 		--build-arg R2_VERSION=$(R2_VERSION) \
+		--build-arg SNAP_ARCH=$(DEB_BUILD_ARCH) \
 		--tag "$(DOCKER_REPO):latest" \
 		docker
 
@@ -54,7 +55,7 @@ link-git-version-sqsh:
 
 # Helpers to speedup docker tests that downloads the snap if possible
 docker/files/radare2-$(TARGETARCH).sqsh:
-	make $(shell (which snap > /dev/null && echo download-snapcraft) || (which gh > /dev/null && echo download-github) || echo snap) \
+	make $(shell (which snap > /dev/null 2>&1 && echo download-snapcraft) || (which gh > /dev/null 2>&1 && echo download-github) || echo snap) \
 		DEB_BUILD_ARCH=$(DEB_BUILD_ARCH) \
 		TARGETARCH=$(TARGETARCH)
 
@@ -68,8 +69,8 @@ download-snapcraft: download-snapcraft-artifact
 	ln -f "snapcraft/radare2_$(R2_VERSION)_$(DEB_BUILD_ARCH).snap" "docker/files/radare2-$(TARGETARCH).sqsh"
 
 download-github-artifacts:
-	$(eval GH_RUN_DB_ID?=$(shell gh run list --workflow "Build images" --status completed --limit 1 --json "databaseId" --jq '.[].databaseId'))
-	gh run download $(GH_RUN_DB_ID) --dir snapcraft --name snaps
+	$(eval GH_RUN_DB_ID?=$(shell gh run list --workflow "Build snaps" --status completed --limit 1 --json "databaseId" --jq '.[].databaseId'))
+	gh run download "$(GH_RUN_DB_ID)" --dir snapcraft --name snaps
 
 download-github: download-github-artifacts
 	$(eval SNAP_FILE?=$(shell ls -t snapcraft/radare2_*_$(DEB_BUILD_ARCH).snap | head -1))
