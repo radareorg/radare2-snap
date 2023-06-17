@@ -81,9 +81,6 @@ parts:
     autotools-configure-parameters:
       - --prefix=/usr
       - --with-checks-level=0
-    prime:
-      - -usr/include
-      - -usr/lib/pkgconfig
   r2ghidra:
     after:
       - radare2
