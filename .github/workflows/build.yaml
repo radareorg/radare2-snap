@@ -8,6 +8,7 @@ on:
     paths:
       - 'snap/**'
       - 'alternative/nofrida/snap/**'
+      - 'alternative/legacy/snap/**'
       - 'docker/**'
 
 jobs:
@@ -22,18 +23,29 @@ jobs:
         cfg:
           - arch: amd64
             path: .
+            experimental: false
           - arch: arm64
             path: .
+            experimental: false
         # Issue building frida on armhf (temporally disabled)
           - arch: armhf
             path: alternative/nofrida/
+            experimental: false
         # platforms without frida supported
           - arch: ppc64el
             path: alternative/nofrida/
+            experimental: false
           # - arch: riscv64
           #   path: alternative/nofrida/
+          #   experimental: true
           # - arch: s390x
           #   path: alternative/nofrida/
+          #   experimental: true
+        # legacy platforms
+          - arch: i386
+            path: alternative/legacy/
+            experimental: true
+    continue-on-error: ${{ matrix.cfg.experimental }}
     steps:
       # Perform the checkout of the main branch
       - name: Checkout
