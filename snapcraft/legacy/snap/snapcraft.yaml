@@ -116,15 +116,6 @@ parts:
       - --with-checks-level=0
     make-parameters:
       - frida_arch=x86
-  r2pipe-python:
-    after:
-      - radare2
-    plugin: python
-    source: . # Dummy source
-    stage-packages:
-      - python3-venv
-    python-packages:
-      - r2pipe
   meson-deps:
     plugin: nil
     build-packages:
