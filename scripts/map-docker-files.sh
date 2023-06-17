@@ -2,7 +2,7 @@
 
 set -e
 
-cd "$(dirname "$0")/../.."
+cd "$(dirname "$0")/.."
 
 # create the docker file structure
 mkdir -p "docker/files"

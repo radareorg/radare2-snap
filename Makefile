@@ -32,11 +32,11 @@ docker: docker/Dockerfile docker/files/radare2-$(TARGETARCH).sqsh docker/files/r
 
 # GitHub Actions scripts
 update:
-	.github/scripts/update-versions.sh
+	scripts/update-versions.sh
 	-git status
 
 map-docker-files:
-	.github/scripts/map-docker-files.sh
+	scripts/map-docker-files.sh
 
 # Clean environment
 clean:

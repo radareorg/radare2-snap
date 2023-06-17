@@ -91,7 +91,7 @@ jobs:
 
       - name: Map artifacts to docker files
         id: map
-        run: .github/scripts/map-docker-files.sh
+        run: scripts/map-docker-files.sh
 
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v2
