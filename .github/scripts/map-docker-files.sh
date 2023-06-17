@@ -23,9 +23,8 @@ for SNAP_FILE in $(find snapcraft -name radare2_\*.snap); do
   echo
 done
 
-# get metadata from any random snap file available
-#  (the following lookup is not requiered while beeing after the for loop)
-#  SNAP_FILE=$(ls -t radare2_*.snap | head -1)
+# get metadata from any non legacy snap file
+SNAP_FILE="docker/files/radare2-amd64.sqsh"
 SNAP_METADATA_FILE=$(mktemp)
 echo "Extracting metadata from ${SNAP_FILE} to ${SNAP_METADATA_FILE}..."
 sqfscat "${SNAP_FILE}" meta/snap.yaml > "${SNAP_METADATA_FILE}"
