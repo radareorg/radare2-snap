@@ -47,5 +47,5 @@ jobs:
     if: needs.update-versions.outputs.changes_detected == 'true'
     needs:
       - update-versions
-    uses: ./.github/workflows/build.yaml
+    uses: ./.github/workflows/snapcraft.yaml
     secrets: inherit
