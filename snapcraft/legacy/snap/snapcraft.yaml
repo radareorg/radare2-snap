@@ -75,7 +75,7 @@ parts:
       - CFLAGS: "${CFLAGS:+} -O3"
     override-pull: |
       snapcraftctl pull
-      patch -p1 < "$SNAPCRAFT_PROJECT_DIR/configure.patch"
+      patch -p1 < "$SNAPCRAFT_PROJECT_DIR/snap/local/patches/configure.patch"
     configflags:
       - --prefix=/usr
       - --with-checks-level=0
