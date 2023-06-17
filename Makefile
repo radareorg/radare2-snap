@@ -40,13 +40,12 @@ map-docker-files:
 
 # Clean environment
 clean:
-	-rm -Rf *.snap *.assert docker/files
+	-rm -Rf snapcraft/*.snap snapcraft/*.assert snapcraft/*/*.snap docker/files
 	-docker rmi $(DOCKER_REPO):latest
 
 # Helpers to build snap
 build-snap: snapcraft/default/snap/snapcraft.yaml
-	cd snapcraft/default/ &&
-		SNAPCRAFT_BUILD_FOR=$(DEB_BUILD_ARCH) snapcraft
+	cd snapcraft/default/ && snapcraft --build-for=$(DEB_BUILD_ARCH)
 
 link-git-version-sqsh:
 	$(eval R2_VERSION?=$(shell awk '/^version:/{gsub(/['\''"]/,"",$$2);print $$2}' "snapcraft/default/snap/snapcraft.yaml"))
@@ -60,20 +59,20 @@ docker/files/radare2-$(TARGETARCH).sqsh:
 		TARGETARCH=$(TARGETARCH)
 
 download-snapcraft-artifact:
-	UBUNTU_STORE_ARCH=$(DEB_BUILD_ARCH) snap download --basename="radare2__$(DEB_BUILD_ARCH)" radare2
+	UBUNTU_STORE_ARCH=$(DEB_BUILD_ARCH) snap download --target-directory=snapcraft --basename="radare2__$(DEB_BUILD_ARCH)" radare2
 
 download-snapcraft: download-snapcraft-artifact
-	$(eval R2_VERSION?=$(shell sqfscat "radare2__$(DEB_BUILD_ARCH).snap" meta/snap.yaml | awk '/^version:/{gsub(/['\''"]/,"",$$2);print $$2;exit}'))
-	mv "radare2__$(DEB_BUILD_ARCH).snap" "radare2_$(R2_VERSION)_$(DEB_BUILD_ARCH).snap"
+	$(eval R2_VERSION?=$(shell sqfscat "snapcraft/radare2__$(DEB_BUILD_ARCH).snap" meta/snap.yaml | awk '/^version:/{gsub(/['\''"]/,"",$$2);print $$2;exit}'))
+	mv "snapcraft/radare2__$(DEB_BUILD_ARCH).snap" "snapcraft/radare2_$(R2_VERSION)_$(DEB_BUILD_ARCH).snap"
 	mkdir -p docker/files
-	ln -f "radare2_$(R2_VERSION)_$(DEB_BUILD_ARCH).snap" "docker/files/radare2-$(TARGETARCH).sqsh"
+	ln -f "snapcraft/radare2_$(R2_VERSION)_$(DEB_BUILD_ARCH).snap" "docker/files/radare2-$(TARGETARCH).sqsh"
 
 download-github-artifacts:
 	$(eval GH_RUN_DB_ID?=$(shell gh run list --workflow "Build images" --status completed --limit 1 --json "databaseId" --jq '.[].databaseId'))
-	gh run download $(GH_RUN_DB_ID) -n snaps
+	gh run download $(GH_RUN_DB_ID) --dir snapcraft --name snaps
 
 download-github: download-github-artifacts
-	$(eval SNAP_FILE?=$(shell ls -t radare2_*_$(DEB_BUILD_ARCH).snap | head -1))
+	$(eval SNAP_FILE?=$(shell ls -t snapcraft/radare2_*_$(DEB_BUILD_ARCH).snap | head -1))
 	mkdir -p docker/files
 	ln -f "$(SNAP_FILE)" "docker/files/radare2-$(TARGETARCH).sqsh"
 
