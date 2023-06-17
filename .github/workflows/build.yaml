@@ -22,30 +22,22 @@ jobs:
       matrix:
         cfg:
           - arch: amd64
-            path: snapcraft/default
-            experimental: false
+            type: default
           - arch: arm64
-            path: snapcraft/default
-            experimental: false
+            type: default
         # Issue building frida on armhf (temporally disabled)
           - arch: armhf
-            path: snapcraft/nofrida
-            experimental: false
+            type: nofrida
         # platforms without frida supported
           - arch: ppc64el
-            path: snapcraft/nofrida
-            experimental: false
+            type: nofrida
           # - arch: riscv64
-          #   path: snapcraft/nofrida
-          #   experimental: true
+          #   type: nofrida
           # - arch: s390x
-          #   path: snapcraft/nofrida
-          #   experimental: true
+          #   type: nofrida
         # legacy platforms
           - arch: i386
-            path: snapcraft/legacy
-            experimental: true
-    continue-on-error: ${{ matrix.cfg.experimental }}
+            type: legacy
     steps:
       # Perform the checkout of the main branch
       - name: Checkout
@@ -61,7 +53,7 @@ jobs:
         uses: diddlesnaps/snapcraft-multiarch-action@93ebbb5ce6d1ab2078c201dd38cf1697666404ca
         with:
           architecture: ${{ matrix.cfg.arch }}
-          path: ${{ matrix.cfg.path }}
+          path: snapcraft/${{ matrix.cfg.type }}
 
       - name: Upload artifact
         uses: actions/upload-artifact@v3
