@@ -114,6 +114,8 @@ parts:
     configflags:
       - --prefix=/usr
       - --with-checks-level=0
+    make-parameters:
+      - frida_arch=x86
   r2pipe-python:
     after:
       - radare2
