@@ -6,9 +6,9 @@ cd "$(dirname "$0")/../.."
 
 # create the docker file structure
 mkdir -p "docker/files"
-for SNAP_FILE in radare2_*.snap; do
+for SNAP_FILE in $(find snapcraft -name radare2_\*.snap); do
   echo "Evaluating: ${SNAP_FILE}"
-  SFBN=${SNAP_FILE%.snap}
+  SFBN=$(basename "$SNAP_FILE" .snap)
   SNAP_ARCH=${SFBN##*_}
 
   case "$SNAP_ARCH" in

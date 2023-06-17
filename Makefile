@@ -1,7 +1,7 @@
 # Makefile used only for local development tests
 
 # This can be used to emulate the full build for a single arch (target: all)
-# or to emulate only some part of the process (targets: snap snap-multiarch docker update map-docker-file)
+# or to emulate only some part of the process (targets: snap docker update map-docker-file)
 
 # To use this makefile is required to have installed localy:
 #  snap, snapcraft, squashfs-tools, docker, gh, yq (mikefarah)
@@ -11,15 +11,13 @@ DEB_BUILD_ARCH?=$(shell type -p dpkg-architecture > /dev/null && dpkg-architectu
 TARGETARCH?=$(shell uname -m | sed -e 's,i[0-9]86,386,g' -e 's,x86_64,amd64,g' -e 's,armv.*,arm,g' -e 's,aarch64,arm64,g' -e 's,ppc.+64le,ppc64le,g')
 DOCKER_REPO?=radare2
 
-.PHONY: all snap snap-multiarch docker update map-docker-files clean \
-	build-snap build-snap-multiarch link-git-version-sqsh \
+.PHONY: all snap docker update map-docker-files clean \
+	build-snap link-git-version-sqsh \
 	download-snapcraft download-github download-snapcraft-artifact download-github-artifacts
 
 all: snap docker
 
 snap: build-snap link-git-version-sqsh
-
-snap-multiarch: build-snap-multiarch link-git-version-sqsh
 
 docker: docker/Dockerfile docker/files/radare2-$(TARGETARCH).sqsh docker/files/radare2-$(TARGETARCH).snap.yaml
 	$(eval R2_VERSION?=$(shell awk '/^version:/{gsub(/['\''"]/,"",$$2);print $$2;exit}' docker/files/radare2-$(TARGETARCH).snap.yaml))
@@ -46,14 +44,12 @@ clean:
 	-docker rmi $(DOCKER_REPO):latest
 
 # Helpers to build snap
-build-snap: snap/snapcraft.yaml
-	SNAPCRAFT_BUILD_FOR=$(DEB_BUILD_ARCH) snapcraft
-
-build-snap-multiarch: snap/snapcraft.yaml
-	snapcraft
+build-snap: snapcraft/default/snap/snapcraft.yaml
+	cd snapcraft/default/ &&
+		SNAPCRAFT_BUILD_FOR=$(DEB_BUILD_ARCH) snapcraft
 
 link-git-version-sqsh:
-	$(eval R2_VERSION?=$(shell awk '/^version:/{gsub(/['\''"]/,"",$$2);print $$2}' "snap/snapcraft.yaml"))
+	$(eval R2_VERSION?=$(shell awk '/^version:/{gsub(/['\''"]/,"",$$2);print $$2}' "snapcraft/default/snap/snapcraft.yaml"))
 	mkdir -p docker/files
 	ln -f "radare2_$(R2_VERSION)_$(DEB_BUILD_ARCH).snap" "docker/files/radare2-$(TARGETARCH).sqsh"
 

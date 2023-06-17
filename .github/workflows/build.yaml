@@ -6,9 +6,9 @@ on:
     branches:
       - 'main'
     paths:
-      - 'snap/**'
-      - 'alternative/nofrida/snap/**'
-      - 'alternative/legacy/snap/**'
+      - 'snapcraft/default/**'
+      - 'snapcraft/nofrida/**'
+      - 'snapcraft/legacy/**'
       - 'docker/**'
 
 jobs:
@@ -22,28 +22,28 @@ jobs:
       matrix:
         cfg:
           - arch: amd64
-            path: .
+            path: snapcraft/default
             experimental: false
           - arch: arm64
-            path: .
+            path: snapcraft/default
             experimental: false
         # Issue building frida on armhf (temporally disabled)
           - arch: armhf
-            path: alternative/nofrida/
+            path: snapcraft/nofrida
             experimental: false
         # platforms without frida supported
           - arch: ppc64el
-            path: alternative/nofrida/
+            path: snapcraft/nofrida
             experimental: false
           # - arch: riscv64
-          #   path: alternative/nofrida/
+          #   path: snapcraft/nofrida
           #   experimental: true
           # - arch: s390x
-          #   path: alternative/nofrida/
+          #   path: snapcraft/nofrida
           #   experimental: true
         # legacy platforms
           - arch: i386
-            path: alternative/legacy/
+            path: snapcraft/legacy
             experimental: true
     continue-on-error: ${{ matrix.cfg.experimental }}
     steps:
@@ -95,7 +95,7 @@ jobs:
         uses: actions/download-artifact@v3
         with:
           name: snaps
-          path: '.'
+          path: snapcraft
 
       - name: Map artifacts to docker files
         id: map
