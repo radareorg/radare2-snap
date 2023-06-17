@@ -7,7 +7,8 @@ REGISTRY_IMAGE=${REGISTRY_IMAGE:-radare/radare2}
 cd "$(dirname "$0")/.."
 
 WORKDIR=$(mktemp -d)
-rm -f "${WORKDIR}/docker-sources"
+DOCKER_SOURCES_FILE="${WORKDIR}/docker-sources"
+rm -f "${DOCKER_SOURCES_FILE}"
 
 for SNAP_FILE in $(find snapcraft -name radare2_\*.snap); do
   echo "Evaluating: ${SNAP_FILE}"
@@ -37,17 +38,18 @@ for SNAP_FILE in $(find snapcraft -name radare2_\*.snap); do
   BASE_SNAP=$(awk '/^base:/{print $2;exit}' "${SNAP_METADATA_FILE}")
   R2_VERSION=$(awk '/^version:/{gsub(/['\''"]/,"",$2);print $2;exit}' "${SNAP_METADATA_FILE}")
   BASE_IMAGE="${BASE_IMAGE}:${BASE_SNAP#core}.04"
+  IID_FILE="${WORKDIR}/iidfile-${TARGETARCH}"
 
   echo "Building docker image to ${TARGETPLATFORM} using ${BASE_IMAGE}..."
   docker buildx build \
     --build-arg "BASE_IMAGE=${BASE_IMAGE}" \
     --build-arg "R2_VERSION=${R2_VERSION}" \
     --build-arg "SNAP_ARCH=${SNAP_ARCH}" \
-    --platform "$TARGETPLATFORM" \
-    --iidfile "${WORKDIR}/iidfile-${TARGETARCH}" \
+    --platform "${TARGETPLATFORM}" \
+    --iidfile "${IID_FILE}" \
     --output "type=image,name=${REGISTRY_IMAGE},push-by-digest=true,name-canonical=true,push=true" \
     docker
-  awk '{print "'"${REGISTRY_IMAGE}"'@"$0}' "${WORKDIR}/iidfile-${TARGETARCH}" >> "${WORKDIR}/docker-sources"
+  awk '{print "'"${REGISTRY_IMAGE}"'@"$0}' "${IID_FILE}" >> "${DOCKER_SOURCES_FILE}"
 done
 
 # get metadata from any default snap file
@@ -56,4 +58,7 @@ echo "Pushing final docker image merged as ${REGISTRY_IMAGE}:${R2_VERSION}..."
 docker buildx imagetools create \
   --tag "${REGISTRY_IMAGE}:latest" \
   --tag "${REGISTRY_IMAGE}:${R2_VERSION}" \
-    $(cat "${WORKDIR}/docker-sources")
+    $(cat "${DOCKER_SOURCES_FILE}")
+
+echo "Clean workdir..."
+rm -vfR "${WORKDIR}"
