@@ -33,10 +33,6 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
   
-      - name: Map artifacts to docker files
-        id: map
-        run: scripts/map-docker-files.sh
-
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v2
 
@@ -50,21 +46,6 @@ jobs:
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
       - name: Build and push docker images
-        uses: docker/build-push-action@v4
-        with:
-          pull: true
-          push: true
-          context: docker
-          platforms: |
-            linux/amd64
-            linux/arm64
-            linux/arm/v7
-            linux/ppc64le
-          # linux/riscv64
-          # linux/s390x
-          build-args: |
-            BASE_IMAGE=${{ steps.map.outputs.base_image }}
-            R2_VERSION=${{ steps.map.outputs.r2_version }}
-          tags: |
-            ${{ vars.DOCKERHUB_REPO }}:latest
-            ${{ vars.DOCKERHUB_REPO }}:${{ steps.map.outputs.r2_version }}
+        run: scripts/docker-push-multiarch.sh
+        env:
+          REGISTRY_IMAGE: ${{ vars.DOCKERHUB_REPO }}

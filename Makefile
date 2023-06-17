@@ -11,7 +11,7 @@ DEB_BUILD_ARCH?=$(shell type -p dpkg-architecture > /dev/null && dpkg-architectu
 TARGETARCH?=$(shell uname -m | sed -e 's,i[0-9]86,386,g' -e 's,x86_64,amd64,g' -e 's,armv.*,arm,g' -e 's,aarch64,arm64,g' -e 's,ppc.+64le,ppc64le,g')
 DOCKER_REPO?=radare2
 
-.PHONY: all snap docker update map-docker-files clean \
+.PHONY: all snap docker docker-push-multiarch update clean \
 	build-snap link-git-version-sqsh \
 	download-snapcraft download-github download-snapcraft-artifact download-github-artifacts
 
@@ -35,8 +35,8 @@ update:
 	scripts/update-versions.sh
 	-git status
 
-map-docker-files:
-	scripts/map-docker-files.sh
+docker-push-multiarch:
+	scripts/docker-push-multiarch.sh
 
 # Clean environment
 clean:
