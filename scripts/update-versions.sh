@@ -19,17 +19,17 @@ yq eval -i '.version=strenv(R2_VERSION) |
   .parts.r2ghidra.source-tag=strenv(R2GHIDRA_VERSION) |
   .parts.r2frida.source-tag=strenv(R2FRIDA_VERSION) |
   .parts.r2dec.source-tag=strenv(R2DEC_VERSION)
-  ' snap/snapcraft.yaml
+  ' snapcraft/default/snap/snapcraft.yaml
 
 echo "Updating versions in snapcraft/nofrida/snap/snapcraft.yaml..." > /dev/stderr
 yq eval -i '.version=strenv(R2_VERSION) | 
   .parts.r2ghidra.source-tag=strenv(R2GHIDRA_VERSION) |
   .parts.r2dec.source-tag=strenv(R2DEC_VERSION)
-  ' alternative/nofrida/snap/snapcraft.yaml
+  ' snapcraft/nofrida/snap/snapcraft.yaml
 
 echo "Updating versions in snapcraft/legacy/snap/snapcraft.yaml..." > /dev/stderr
 yq eval -i '.version=strenv(R2_VERSION) | 
   .parts.r2ghidra.source-tag=strenv(R2GHIDRA_VERSION) |
   .parts.r2frida.source-tag=strenv(R2FRIDA_VERSION) |
   .parts.r2dec.source-tag=strenv(R2DEC_VERSION)
-  ' alternative/legacy/snap/snapcraft.yaml
+  ' snapcraft/legacy/snap/snapcraft.yaml
