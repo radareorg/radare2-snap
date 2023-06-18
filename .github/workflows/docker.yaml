@@ -45,9 +45,6 @@ jobs:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
-      - name: Fix 5.8.6 tag
-        run: docker buildx imagetools create --tag ${{ vars.DOCKERHUB_REPO }}:5.8.6 ${{ vars.DOCKERHUB_REPO }}@sha256:efa4e6ecf8fc55400e08de9d696c5081e86934e360d9025944300c98088f9bd2
-
       - name: Build and push docker images
         run: scripts/docker-push-multiarch.sh
         env:
