@@ -14,15 +14,17 @@ for SNAP_FILE in $(find snapcraft -name radare2_\*.snap); do
   echo "Evaluating: ${SNAP_FILE}"
   SFBN=$(basename "$SNAP_FILE" .snap)
   SNAP_ARCH=${SFBN##*_}
-  BASE_IMAGE="ubuntu"
 
+  BASE_IMAGE="ubuntu"
+  TARGETPLATFORM=""
   case "$SNAP_ARCH" in
     armhf)    TARGETARCH="arm"; TARGETPLATFORM="linux/arm/v7";;
-    ppc64el)  TARGETARCH="ppc64le"; TARGETPLATFORM="linux/${TARGETARCH}";;
-    i386)     TARGETARCH="386"; TARGETPLATFORM="linux/${TARGETARCH}";;
-    riscv64)  TARGETARCH="riscv64"; TARGETPLATFORM="linux/${TARGETARCH}"; BASE_IMAGE="riscv64/ubuntu";;
-    *)        TARGETARCH=${SNAP_ARCH}; TARGETPLATFORM="linux/${TARGETARCH}";;
+    ppc64el)  TARGETARCH="ppc64le";;
+    i386)     TARGETARCH="386";;
+    riscv64)  TARGETARCH="riscv64"; BASE_IMAGE="riscv64/ubuntu";;
+    *)        TARGETARCH="${SNAP_ARCH}";;
   esac
+  TARGETPLATFORM=${TARGETPLATFORM:-"linux/${TARGETARCH}"}
 
   echo "Clean docker files..."
   rm -fR "docker/files"
@@ -30,7 +32,7 @@ for SNAP_FILE in $(find snapcraft -name radare2_\*.snap); do
 
   echo "Hard link radare2 snap ${SNAP_ARCH} to docker squashfs image for ${TARGETARCH}..."
   SQSH_FILE="docker/files/radare2-${TARGETARCH}.sqsh"
-  ln -fv "${SNAP_FILE}" "${SQSH_FILE}"
+  ln -v "${SNAP_FILE}" "${SQSH_FILE}"
 
   SNAP_METADATA_FILE="${WORKDIR}/radare2-${TARGETARCH}.snap.yaml"
   echo "Extracting metadata from ${SNAP_FILE} to ${SNAP_METADATA_FILE}..."
@@ -49,7 +51,7 @@ for SNAP_FILE in $(find snapcraft -name radare2_\*.snap); do
     --iidfile "${IID_FILE}" \
     --output "type=image,name=${REGISTRY_IMAGE},push-by-digest=true,name-canonical=true,push=true" \
     docker
-  awk '{print "'"${REGISTRY_IMAGE}"'@"$0}' "${IID_FILE}" >> "${DOCKER_SOURCES_FILE}"
+  echo "${REGISTRY_IMAGE}@$(cat "${IID_FILE}")" >> "${DOCKER_SOURCES_FILE}"
 done
 
 # get metadata from any default snap file
