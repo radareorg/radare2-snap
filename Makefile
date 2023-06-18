@@ -1,9 +1,10 @@
 # Makefile used only for local development tests
 
 # This can be used to emulate the full build for a single arch (target: all)
-# or to emulate only some part of the process (targets: snap docker update map-docker-file)
+# or to emulate only some part of the process (targets: snap docker update)
+# or to publish a docker image manually (target: docker-push-multiarch)
 
-# To use this makefile is required to have installed localy:
+# To use this makefile is required to have installed locally:
 #  snap, snapcraft, squashfs-tools, docker, gh, yq (mikefarah)
 
 DEB_HOST_ARCH?=$(shell type -p dpkg-architecture > /dev/null && dpkg-architecture -qDEB_HOST_ARCH || uname -m | sed -e 's,i[0-9]86,i386,g' -e 's,x86_64,amd64,g' -e 's,armv.*,armhf,g' -e 's,aarch64,arm64,g' -e 's,ppc.+64le,ppc64el,g')
@@ -11,7 +12,7 @@ DEB_BUILD_ARCH?=$(shell type -p dpkg-architecture > /dev/null && dpkg-architectu
 TARGETARCH?=$(shell uname -m | sed -e 's,i[0-9]86,386,g' -e 's,x86_64,amd64,g' -e 's,armv.*,arm,g' -e 's,aarch64,arm64,g' -e 's,ppc.+64le,ppc64le,g')
 DOCKER_REPO?=radare2
 
-.PHONY: all snap docker docker-push-multiarch update clean \
+.PHONY: all snap docker update docker-push-multiarch clean \
 	build-snap link-git-version-sqsh \
 	download-snapcraft download-github download-snapcraft-artifact download-github-artifacts
 
@@ -51,7 +52,7 @@ build-snap: snapcraft/default/snap/snapcraft.yaml
 link-git-version-sqsh:
 	$(eval R2_VERSION?=$(shell awk '/^version:/{gsub(/['\''"]/,"",$$2);print $$2}' "snapcraft/default/snap/snapcraft.yaml"))
 	mkdir -p docker/files
-	ln -f "radare2_$(R2_VERSION)_$(DEB_BUILD_ARCH).snap" "docker/files/radare2-$(TARGETARCH).sqsh"
+	ln -f "snapcraft/default/radare2_$(R2_VERSION)_$(DEB_BUILD_ARCH).snap" "docker/files/radare2-$(TARGETARCH).sqsh"
 
 # Helpers to speedup docker tests that downloads the snap if possible
 docker/files/radare2-$(TARGETARCH).sqsh:
