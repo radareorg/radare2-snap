@@ -5,25 +5,21 @@ FROM --platform=$BUILDPLATFORM "alpine:3.18" as builder
 
 RUN apk add --no-cache squashfs-tools yq
 
-# Uncompress snap to /target/app
+# Install snap into /target
 ARG TARGETARCH
 COPY "files/radare2-${TARGETARCH}.sqsh" /tmp/radare2.sqsh
-RUN mkdir /target && \
-    unsquashfs -no-progress -dest "/target/app" -excludes "/tmp/radare2.sqsh" snap && \
-    mv /target/app/meta /tmp/
+RUN mkdir -p /target/snap/radare2 /target/var/snap/radare2/current /target/var/snap/radare2/common && \
+    unsquashfs -no-progress -dest "/target/snap/radare2/current" -excludes "/tmp/radare2.sqsh" snap
 
-# Replicate snap structure
-RUN set -ex; BASE_SNAP=$(yq eval -o t .base /tmp/meta/snap.yaml); \
-    mkdir -p "/target/snap/${BASE_SNAP}" "/target/snap/radare2" "/target/var/snap/radare2" "/target/var/app"; \
-    ln -s "/" "/target/snap/${BASE_SNAP}/current"; \
-    ln -s "/app" "/target/snap/radare2/current"; \
-    ln -s "/var/app" "/target/var/snap/radare2/current"; \
-    ln -s "/var/app" "/target/var/snap/radare2/common"
+# Create base snap symlinks
+RUN set -ex; BASE_SNAP=$(yq eval -o t .base /target/snap/radare2/current/meta/snap.yaml); \
+    mkdir -p "/target/snap/${BASE_SNAP}"; ln -s "/" "/target/snap/${BASE_SNAP}/current"
 
 # Create snap external command aliases
 COPY "command.sh" /target/snap/bin/radare2
 RUN set -ex; \
-    for cmd in $(yq eval -o t '.apps | keys | .[] | select(. != "radare2")' /tmp/meta/snap.yaml); \
+    for cmd in $(yq eval -o t '.apps | keys | .[] | select(. != "radare2")' \
+        /target/snap/radare2/current/meta/snap.yaml); \
     do ln -s "radare2" "/target/snap/bin/radare2.$cmd"; done
 
 # Start the final image stage
@@ -56,15 +52,16 @@ COPY --from=builder /target /
 USER r2
 WORKDIR /home/r2
 ENV HOME="/home/r2" \
-    PATH="/app/usr/bin:/app/bin:/snap/bin:${PATH}" \
-    R2_PREFIX="/app/usr" \
-    SLEIGHHOME="/app/usr/lib/radare2/last" \
-    SNAP="/app" \
+    PATH="/snap/radare2/current/usr/bin:/snap/radare2/current/bin:/snap/bin:${PATH}" \
+    R2_PREFIX="/snap/radare2/current/usr" \
+    SLEIGHHOME="/snap/radare2/current/usr/lib/radare2/${R2_VERSION}" \
+    SNAP="/snap/radare2/current" \
     SNAP_NAME="radare2" \
+    SNAP_INSTANCE_NAME="radare2" \
     SNAP_VERSION="${R2_VERSION}" \
     SNAP_ARCH="${SNAP_ARCH}" \
     SNAP_REAL_HOME="/home/r2" \
-    SNAP_USER_DATA="/home/r2" \
-    SNAP_USER_COMMON="/home/r2" \
-    SNAP_DATA="/var/app" \
-    SNAP_COMMON="/var/app"
+    SNAP_USER_DATA="/home/r2/snap/radare2/current" \
+    SNAP_USER_COMMON="/home/r2/snap/radare2/common" \
+    SNAP_DATA="/var/snap/radare2/current" \
+    SNAP_COMMON="/var/snap/radare2/common"

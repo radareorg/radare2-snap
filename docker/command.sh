@@ -1,4 +1,4 @@
 #!/bin/sh
 
 COMMAND="$(basename "$0")"
-exec /app/usr/bin/"${COMMAND#radare2.}" "$@"
+exec /snap/radare2/current/usr/bin/"${COMMAND#radare2.}" "$@"
