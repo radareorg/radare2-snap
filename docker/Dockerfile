@@ -52,9 +52,9 @@ COPY --from=builder /target /
 USER r2
 WORKDIR /home/r2
 ENV HOME="/home/r2" \
-    PATH="/snap/radare2/current/usr/bin:/snap/radare2/current/bin:/snap/bin:${PATH}" \
-    LD_LIBRARY_PATH="/snap/radare2/current/usr/lib:/snap/radare2/current/lib" \
-    PKG_CONFIG_PATH="/snap/radare2/current/usr/lib/pkgconfig" \
+    PATH="/home/r2/.local/share/radare2/prefix/bin:/snap/radare2/current/usr/bin:/snap/radare2/current/bin:/snap/bin:${PATH}" \
+    LD_LIBRARY_PATH="/home/r2/.local/share/radare2/prefix/lib:/snap/radare2/current/usr/lib:/snap/radare2/current/lib" \
+    PKG_CONFIG_PATH="/home/r2/.local/share/radare2/prefix/lib/pkgconfig:/snap/radare2/current/usr/lib/pkgconfig:/snap/radare2/current/lib/pkgconfig" \
     R2_PREFIX="/snap/radare2/current/usr" \
     SLEIGHHOME="/snap/radare2/current/usr/lib/radare2/${R2_VERSION}" \
     SNAP="/snap/radare2/current" \
