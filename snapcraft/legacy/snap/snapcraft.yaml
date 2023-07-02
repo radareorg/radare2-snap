@@ -57,6 +57,7 @@ apps:
 environment:
   R2_PREFIX: "$SNAP/usr"
   SLEIGHHOME: "$SNAP/usr/lib/radare2/$SNAP_VERSION"
+  PKG_CONFIG_PATH: "$SNAP/usr/lib/pkgconfig${PKG_CONFIG_PATH:+:$PKG_CONFIG_PATH}"
 architectures:
   - i386
 build-packages:
@@ -79,6 +80,9 @@ parts:
     configflags:
       - --prefix=/usr
       - --with-checks-level=0
+    override-prime: |
+      snapcraftctl prime
+      sed -i 's,^prefix=.*$,prefix=/snap/radare2/current/usr,' usr/lib/pkgconfig/*.pc
   r2ghidra:
     after:
       - radare2

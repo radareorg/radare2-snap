@@ -57,6 +57,7 @@ apps:
 environment:
   R2_PREFIX: "$SNAP/usr"
   SLEIGHHOME: "$SNAP/usr/lib/radare2/$SNAP_VERSION"
+  PKG_CONFIG_PATH: "$SNAP/usr/lib/pkgconfig${PKG_CONFIG_PATH:+:$PKG_CONFIG_PATH}"
 architectures:
   - build-on: [amd64]
     build-for: amd64
@@ -100,6 +101,9 @@ parts:
     autotools-configure-parameters:
       - --prefix=/usr
       - --with-checks-level=0
+    override-prime: |
+      craftctl default
+      sed -i 's,^prefix=.*$,prefix=/snap/radare2/current/usr,' usr/lib/pkgconfig/*.pc
   r2frida:
     after:
       - radare2
