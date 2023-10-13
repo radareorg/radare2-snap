@@ -3,7 +3,7 @@
 [![snap: radare2](https://snapcraft.io/radare2/badge.svg "snap latest stable version")](https://snapcraft.io/radare2)
 [![docker: radare/radare2](https://img.shields.io/docker/pulls/radare/radare2?logo=docker&logoColor=white&label=radare%2Fradare2 "docker pulls")](https://hub.docker.com/r/radare/radare2)
 
-This repository contains the recipie to build the snap version of radare2 as well as docker recipie to run the same build.
+This repository contains the recipie to build the snap version of radare2 using docker as well to build a standalone docker image with the same build.
 
 The resulting build includes the following projects:
 
