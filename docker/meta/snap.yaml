@@ -1,0 +1,25 @@
+name: radare2
+version: 0.0.0
+summary: UNIX-like reverse engineering framework and command-line toolset
+description: |
+  r2 is a complete rewrite of radare. It provides a set of libraries, tools and
+  plugins to ease reverse engineering tasks.
+
+  The radare project started as a simple command-line hexadecimal editor focused
+  on forensics. Today, r2 is a featureful low-level command-line tool with
+  support for scripting. r2 can edit files on local hard drives, view kernel
+  memory, and debug programs locally or via a remote gdb server. r2's wide
+  architecture support allows you to analyze, emulate, debug, modify, and
+  disassemble any binary.
+license: LGPL-3.0-only
+architectures: []
+base: core
+apps: {}
+confinement: classic
+grade: stable
+environment:
+  R2_PREFIX: $SNAP
+  SLEIGHHOME: $SNAP/lib/radare2/$SNAP_VERSION
+  PKG_CONFIG_PATH: $SNAP/lib/pkgconfig${PKG_CONFIG_PATH:+:$PKG_CONFIG_PATH}
+  LD_LIBRARY_PATH: ${SNAP_LIBRARY_PATH}${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}:$SNAP/lib
+  PATH: $SNAP/bin:$PATH

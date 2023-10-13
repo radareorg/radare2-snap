@@ -1,3 +1,2 @@
-*.snap
-*.assert
-/docker/files
+digests
+snaps

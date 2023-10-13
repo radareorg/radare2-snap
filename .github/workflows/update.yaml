@@ -17,10 +17,6 @@ jobs:
       changes_detected: ${{ steps.commit.outputs.changes_detected }}
 
     steps:
-      # Install dependencies
-      - name: Install required dependencies
-        run: sudo snap install yq
-
       # Perform the checkout of the main branch
       - name: Checkout
         uses: actions/checkout@v3
@@ -47,5 +43,5 @@ jobs:
     if: needs.update-versions.outputs.changes_detected == 'true'
     needs:
       - update-versions
-    uses: ./.github/workflows/snapcraft.yaml
+    uses: ./.github/workflows/publish.yaml
     secrets: inherit
