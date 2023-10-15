@@ -73,24 +73,24 @@ FROM --platform=$BUILDPLATFORM "alpine:${ALPINE_VERSION}" as builder
 
 RUN apk add --no-cache yq patchelf
 
+ARG R2_VERSION
+ARG BASE_SNAP
+ARG SNAP_ARCH
+ARG MULTIARCH
 ENV PREFIX="/snap/radare2/current"
 COPY --from=native-builder /snap /snap
 
 # patchelf
 # An alternative to use patchelf is to build with
 # LDFLAGS="-Wl,-rpath='\$\$ORIGIN/../lib' -Wl,-dynamic-linker=${DYNAMIC_LINKER}"
-ARG BASE_SNAP
-ARG MULTIARCH
 RUN BASE_PATH="/snap/$BASE_SNAP/current" LIBRARY_PATH="$BASE_PATH/lib/$MULTIARCH" DYNAMIC_LINKER=$(patchelf --print-interpreter "$PREFIX/bin/radare2") && \
-    find "$PREFIX/bin" -maxdepth 1 -type f -exec patchelf --set-interpreter "${BASE_PATH}${DYNAMIC_LINKER}" --force-rpath --set-rpath "\$ORIGIN/../lib:\$ORIGIN/../lib/radare2/$R2_VERSION:$LIBRARY_PATH" \{\} \+ && \
+    find "$PREFIX/bin" -maxdepth 1 -type f -exec patchelf --set-interpreter "${BASE_PATH}${DYNAMIC_LINKER}" --force-rpath --set-rpath "\$ORIGIN/../lib:$LIBRARY_PATH" \{\} \+ && \
     find "$PREFIX/lib" -maxdepth 1 -name \*.so\* -type f -exec patchelf --force-rpath --set-rpath "\$ORIGIN:$LIBRARY_PATH" \{\} \+ && \
     find "$PREFIX/lib/radare2/$R2_VERSION" -maxdepth 1 -name \*.so\* -type f -exec patchelf --force-rpath --set-rpath "\$ORIGIN/../..:$LIBRARY_PATH" \{\} \+
 
 # Create snap metadata and docker alias
 COPY meta "$PREFIX/meta"
 COPY "command.sh" /snap/bin/radare2
-ARG R2_VERSION
-ARG SNAP_ARCH
 RUN set -ex; \
     yq eval -i ".version=\"$R2_VERSION\" | .base=\"$BASE_SNAP\" | .architectures=[\"$SNAP_ARCH\"]" "$PREFIX/meta/snap.yaml"; \
     for f in "$PREFIX/bin/"* ; do c=$(basename "$f"); \
