@@ -37,8 +37,8 @@ COPY patches /usr/src/patches
 
 # radare2
 ARG R2_VERSION
-RUN git clone --branch "$R2_VERSION" --recurse-submodules --depth 1 https://github.com/radareorg/radare2.git && \
-    cd radare2 && \
+RUN curl -L "https://github.com/radareorg/radare2/releases/download/${R2_VERSION}/radare2-${R2_VERSION}.tar.xz" | tar -xJ && \
+    cd "radare2-${R2_VERSION}" && \
     patch -p1 < "/usr/src/patches/configure.patch" && \
     ./configure --prefix="$PREFIX" --with-checks-level=0 && \
     make && make install
