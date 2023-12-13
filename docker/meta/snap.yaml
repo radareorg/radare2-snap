@@ -19,7 +19,6 @@ confinement: classic
 grade: stable
 environment:
   R2_PREFIX: $SNAP
-  SLEIGHHOME: $SNAP/lib/radare2/$SNAP_VERSION/r2ghidra_sleigh
   PKG_CONFIG_PATH: $SNAP/lib/pkgconfig${PKG_CONFIG_PATH:+:$PKG_CONFIG_PATH}
   LD_LIBRARY_PATH: ${SNAP_LIBRARY_PATH}${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}:$SNAP/lib
   PATH: $SNAP/bin:$PATH
