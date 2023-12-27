@@ -1,0 +1,29 @@
+name: Push README to Docker Hub
+
+on:
+  push:
+    branches:
+      - 'main'
+    paths:
+      - 'README-containers.md'
+      - '.github/workflows/readme.yml'
+
+jobs:
+  push-readme:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          ref: main
+
+      - name: Push README to DockerHub
+        uses: christian-korneck/update-container-description-action@v1
+        env:
+          DOCKER_USER: ${{ secrets.DOCKERHUB_USERNAME }}
+          DOCKER_PASS: ${{ secrets.DOCKERHUB_TOKEN }}
+        with:
+          destination_container_repo: ${{ vars.DOCKERHUB_REPO }}
+          provider: dockerhub
+          short_description: 'UNIX-like reverse engineering framework and command-line toolset'
+          readme_file: 'README-containers.md'
