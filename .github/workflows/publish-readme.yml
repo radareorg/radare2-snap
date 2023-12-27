@@ -6,7 +6,7 @@ on:
       - 'main'
     paths:
       - 'README-containers.md'
-      - '.github/workflows/readme.yml'
+      - '.github/workflows/publish-readme.yml'
 
 jobs:
   push-readme:
