@@ -7,7 +7,8 @@ The radare project started as a simple command-line hexadecimal editor focused o
 ## Official stable version
 
 The docker image for the stable version is based on **Ubuntu** and the [radare2 snap](https://snapcraft.io/radare2) build.
-The Dockerfile to build can be found in this [dedicated repository](https://github.com/radareorg/radare2-snap). Any issue found in the packaging can be opened in this repository.
+The Dockerfile to build can be found in this [dedicated repository](https://github.com/radareorg/radare2-snap).
+Any issue found in this packaging can be opened [there](https://github.com/radareorg/radare2-snap/issues).
 
 
 The resulting build includes the following projects:
@@ -16,11 +17,12 @@ The resulting build includes the following projects:
 * [r2ghidra](https://github.com/radareorg/r2ghidra)
 * [r2frida](https://github.com/nowsecure/r2frida) (only in supported platforms)
 * [r2dec](https://github.com/wargio/r2dec-js)
+* [r2pipe](https://pypi.org/project/r2pipe/) (for Python)
 
 
 ### Run
 
-To use this docker image you can use either:
+To use this docker image you can use:
 ```
 docker run -ti radare/radare2
 ```
