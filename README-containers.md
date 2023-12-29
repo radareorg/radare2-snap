@@ -1,13 +1,19 @@
 # radare2 docker image
 
-r2 is a complete rewrite of radare. It provides a set of libraries, tools and plugins to ease reverse engineering tasks.
-
-The radare project started as a simple command-line hexadecimal editor focused on forensics. Today, r2 is a featureful low-level command-line tool with support for scripting. r2 can edit files on local hard drives, view kernel memory, and debug programs locally or via a remote gdb server. r2's wide architecture support allows you to analyze, emulate, debug, modify, and disassemble any binary.
+Radare2 (also known as r2) is a complete framework for reverse-engineering
+and analyzing binaries; composed of a set of small utilities that can be used
+together or independently from the command line. Built around a disassembler
+for computer software which generates assembly language source code from
+machine-executable code, it supports a variety of executable formats for
+different processors and operating systems. Apart from the static analysis
+feature it also supports debugging and emulation. The architecture of the
+framework is modular and allows to use existing or create new plugins for new
+file formats, architectures, analysis features.
 
 ## Official stable version
 
-The docker image for the stable version is based on **Ubuntu** and the [radare2 snap](https://snapcraft.io/radare2) build.
-The Dockerfile to build can be found in this [dedicated repository](https://github.com/radareorg/radare2-snap).
+This registry image is for the stable version is based on **Ubuntu** and the [radare2 snap](https://snapcraft.io/radare2) build.
+The Dockerfile used to build it can be found in [this dedicated repository](https://github.com/radareorg/radare2-snap).
 Any issue found in this packaging can be opened [there](https://github.com/radareorg/radare2-snap/issues).
 
 
