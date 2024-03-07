@@ -70,11 +70,18 @@ RUN git clone --branch "$R2DEC_VERSION" --recurse-submodules --depth 1 https://g
     meson setup --prefix "$PREFIX" -Djsc_folder=".." build && \
     ninja -C build install
 
+# Build r2yara
+ARG R2YARA_VERSION=main
+RUN git clone --branch "$R2YARA_VERSION" --recurse-submodules --depth 1 https://github.com/radareorg/r2yara.git && \
+    cd r2yara && \
+    ./configure --prefix="$PREFIX" --with-checks-level=0 && \
+    make && make install
+
 # Generate SBOM files
 ARG R2_SNAP_COMMIT
 COPY sbom /usr/src/sbom
 RUN mkdir -p "$PREFIX/share/sbom/"; \
-    SBOMS="radare2-snap radare2 r2ghidra r2dec"; \
+    SBOMS="radare2-snap radare2 r2ghidra r2dec r2yara"; \
     [ -n "$FRIDA_ARCH" ] && SBOMS="$SBOMS r2frida"; \
     for c in $SBOMS; do \
         echo "Generate SBOM for $c..."; \
