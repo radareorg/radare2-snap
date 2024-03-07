@@ -69,6 +69,7 @@ docker-buildx-push:
 		--target docker \
 		--platform "$(TARGETPLATFORM)" \
 		--iidfile "digests/$(SNAP_ARCH).iidfile" \
+		--attest type=sbom \
 		--output "type=image,name=$(REGISTRY_IMAGE),push-by-digest=true,name-canonical=true,push=true" \
 		docker
 
