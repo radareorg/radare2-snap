@@ -145,6 +145,7 @@ RUN apt-get update && \
 
 # Add image labels
 ARG R2_VERSION
+ARG R2_SNAP_COMMIT
 LABEL org.opencontainers.image.title="radare2" \
       org.opencontainers.image.description="UNIX-like reverse engineering framework and command-line toolset" \
       org.opencontainers.image.ref.name="radare/radare2" \
@@ -152,7 +153,8 @@ LABEL org.opencontainers.image.title="radare2" \
       org.opencontainers.image.vendor="radareorg" \
       org.opencontainers.image.licenses="LGPL-3.0-only" \
       org.opencontainers.image.url="https://www.radare.org/" \
-      org.opencontainers.image.source="https://github.com/radareorg/radare2-snap"
+      org.opencontainers.image.source="https://github.com/radareorg/radare2-snap" \
+      org.opencontainers.image.revision="${R2_SNAP_COMMIT}"
 
 # Copy uncompressed snap files
 ARG SNAP_ARCH
