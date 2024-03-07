@@ -5,6 +5,7 @@ DOCKER_IMAGE?=$(DOCKER_REPO):$(DOCKER_TAG)
 DEB_BUILD_ARCH?=$(shell type -p dpkg-architecture > /dev/null && dpkg-architecture -qDEB_BUILD_ARCH || uname -m | sed -e 's,i[0-9]86,i386,g' -e 's,x86_64,amd64,g' -e 's,armv.*,armhf,g' -e 's,aarch64,arm64,g' -e 's,ppc.+64le,ppc64el,g')
 SNAP_ARCH?=$(DEB_BUILD_ARCH)
 #ARCH_CONFIGS=$(wildcard config/*.mk)
+COSIGN_ARGS?=
 
 include versions.mk config/$(SNAP_ARCH).mk
 MESON_VERSION?=0.64.1
@@ -84,6 +85,12 @@ docker-push-multiarch: digests
 		--tag "$(REGISTRY_IMAGE):$(DOCKER_TAG)" \
 		--tag "$(REGISTRY_IMAGE):$(R2_VERSION)" \
 			$(shell awk '{print "$(REGISTRY_IMAGE)@"$$0}' digests/*.iidfile)
+
+# Sign images
+cosign-sign: digests
+	cosign sign $(COSIGN_ARGS) \
+		--annotations tag=$(R2_VERSION) \
+		$(shell awk '{print "$(REGISTRY_IMAGE)@"$$0}' digests/*.iidfile)
 
 # GitHub Actions scripts
 update:
