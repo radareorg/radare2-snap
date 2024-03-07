@@ -11,7 +11,7 @@ jobs:
     permissions:
       # Give the default GITHUB_TOKEN write permission to commit and push the
       # added or changed files to the repository.
-      contents: write   
+      contents: write
 
     outputs:
       changes_detected: ${{ steps.commit.outputs.changes_detected }}
@@ -19,7 +19,7 @@ jobs:
     steps:
       # Perform the checkout of the main branch
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           ref: main
 
@@ -32,7 +32,7 @@ jobs:
       # Commit changed file back to the repository
       - name: Commit changes
         id: commit
-        uses: stefanzweifel/git-auto-commit-action@3ea6ae190baf489ba007f7c92608f33ce20ef04a
+        uses: stefanzweifel/git-auto-commit-action@8756aa072ef5b4a080af5dc8fef36c5d586e521d # v5.0.0
         with:
           commit_message: Automatic update versions
           #commit_user_name: 'github-actions[bot]'
