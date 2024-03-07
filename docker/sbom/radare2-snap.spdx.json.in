@@ -1,0 +1,37 @@
+{
+  "SPDXID": "SPDXRef-DOCUMENT",
+  "spdxVersion": "SPDX-2.3",
+  "creationInfo": {
+    "created": "2024-03-07T14:00:00Z",
+    "creators": [ "Organization: radare org" ]
+  },
+  "name": "radare2-snap",
+  "dataLicense": "CC0-1.0",
+  "documentDescribes": [
+    "SPDXRef-com.github.radareorg-radare2-snap"
+  ],
+  "documentNamespace": "https://github.com/radareorg/radare2-snap/sbom/radare2-snap-${R2_SNAP_COMMIT}",
+  "packages": [
+    {
+      "SPDXID": "SPDXRef-com.github.radareorg-radare2-snap",
+      "name": "radare2-snap",
+      "versionInfo": "${R2_VERSION}+${R2_SNAP_COMMIT}",
+      "downloadLocation": "git+https://github.com/radareorg/radare2-snap#${R2_SNAP_COMMIT}",
+      "filesAnalyzed": false,
+      "supplier": "Organization: radare org",
+      "primaryPackagePurpose": "INSTALL",
+      "externalRefs": [
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceType": "purl",
+          "referenceLocator": "pkg:github/radareorg/radare2-snap@${R2_SNAP_COMMIT}"
+        },
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceType": "url",
+          "referenceLocator": "snap://radare2"
+        }
+      ]
+    }
+  ]
+}

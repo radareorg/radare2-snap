@@ -8,6 +8,7 @@ SNAP_ARCH?=$(DEB_BUILD_ARCH)
 
 include versions.mk config/$(SNAP_ARCH).mk
 MESON_VERSION?=0.64.1
+R2_SNAP_COMMIT?=$(shell git rev-parse --short HEAD)
 DOCKER_BUILD_ARGS+= \
 	--build-arg BASE_IMAGE=$(BASE_IMAGE) \
 	--build-arg BASE_SNAP=$(BASE_SNAP) \
@@ -15,6 +16,7 @@ DOCKER_BUILD_ARGS+= \
 	--build-arg MULTIARCH=$(MULTIARCH) \
 	--build-arg FRIDA_ARCH=$(FRIDA_ARCH) \
 	--build-arg MESON_VERSION=$(MESON_VERSION) \
+	--build-arg R2_SNAP_COMMIT=$(R2_SNAP_COMMIT) \
 	--build-arg R2_VERSION=$(R2_VERSION) \
 	--build-arg R2GHIDRA_VERSION=$(R2GHIDRA_VERSION) \
 	--build-arg R2FRIDA_VERSION=$(R2FRIDA_VERSION) \

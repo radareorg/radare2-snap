@@ -1,0 +1,33 @@
+{
+  "SPDXID": "SPDXRef-DOCUMENT",
+  "spdxVersion": "SPDX-2.3",
+  "creationInfo": {
+    "created": "2024-03-07T14:00:00Z",
+    "creators": [ "Organization: radare org" ]
+  },
+  "name": "r2dec",
+  "dataLicense": "CC0-1.0",
+  "documentDescribes": [
+    "SPDXRef-com.github.wargio-r2dec-js"
+  ],
+  "documentNamespace": "https://github.com/radareorg/radare2-snap/sbom/r2dec-${R2_SNAP_COMMIT}",
+  "packages": [
+    {
+      "SPDXID": "SPDXRef-com.github.wargio-r2dec-js",
+      "name": "r2dec",
+      "versionInfo": "${R2DEC_VERSION}",
+      "downloadLocation": "git+https://github.com/wargio/r2dec-js#${R2DEC_VERSION}",
+      "filesAnalyzed": false,
+      "licenseDeclared": "MIT AND BSD-3-Clause",
+      "supplier": "Person: Giovanni Dante Grazioli",
+      "primaryPackagePurpose": "LIBRARY",
+      "externalRefs": [
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceType": "purl",
+          "referenceLocator": "pkg:github/wargio/r2dec-js@${R2DEC_VERSION}"
+        }
+      ]
+    }
+  ]
+}

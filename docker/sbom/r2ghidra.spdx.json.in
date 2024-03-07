@@ -1,0 +1,84 @@
+{
+  "SPDXID": "SPDXRef-DOCUMENT",
+  "spdxVersion": "SPDX-2.3",
+  "creationInfo": {
+    "created": "2024-03-07T14:00:00Z",
+    "creators": [ "Organization: radare org" ]
+  },
+  "name": "r2ghidra",
+  "dataLicense": "CC0-1.0",
+  "documentDescribes": [
+    "SPDXRef-com.github.radareorg-r2ghidra"
+  ],
+  "documentNamespace": "https://github.com/radareorg/radare2-snap/sbom/r2ghidra-${R2_SNAP_COMMIT}",
+  "packages": [
+    {
+      "SPDXID": "SPDXRef-com.github.radareorg-r2ghidra",
+      "name": "r2ghidra",
+      "versionInfo": "${R2GHIDRA_VERSION}",
+      "downloadLocation": "git+https://github.com/radareorg/r2ghidra#${R2GHIDRA_VERSION}",
+      "filesAnalyzed": false,
+      "licenseDeclared": "LGPL-3.0-only",
+      "supplier": "Organization: radare org",
+      "primaryPackagePurpose": "LIBRARY",
+      "externalRefs": [
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceType": "purl",
+          "referenceLocator": "pkg:github/radareorg/r2ghidra@${R2GHIDRA_VERSION}"
+        }
+      ]
+    },
+    {
+      "SPDXID": "SPDXRef-com.github.radareorg-ghidra-native",
+      "name": "ghidra-native",
+      "versionInfo": "",
+      "downloadLocation": "git+https://github.com/radareorg/ghidra-native",
+      "filesAnalyzed": false,
+      "licenseDeclared": "Apache-2.0",
+      "supplier": "Organization: radare org",
+      "primaryPackagePurpose": "SOURCE",
+      "externalRefs": [
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceType": "purl",
+          "referenceLocator": "pkg:github/radareorg/ghidra-native"
+        }
+      ]
+    },
+    {
+      "SPDXID": "SPDXRef-com.github.zeux-pugixml",
+      "name": "pugixml",
+      "versionInfo": "1.11",
+      "downloadLocation": "git+https://github.com/zeux/pugixml",
+      "filesAnalyzed": false,
+      "licenseDeclared": "BSD-3-Clause",
+      "supplier": "Person: Arseny Kapoulkine",
+      "primaryPackagePurpose": "SOURCE",
+      "externalRefs": [
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceType": "purl",
+          "referenceLocator": "pkg:github/zeux/pugixml"
+        },
+        {
+          "referenceCategory" : "SECURITY",
+          "referenceLocator" : "cpe:2.3:a:pugixml_project:pugixml:1.11:*:*:*:*:*:*:*",
+          "referenceType" : "cpe23Type"
+        }
+      ]
+    }
+  ],
+  "relationships": [
+    {
+      "relationshipType": "BUILD_DEPENDENCY_OF",
+      "spdxElementId": "SPDXRef-com.github.radareorg-ghidra-native",
+      "relatedSpdxElement": "SPDXRef-com.github.radareorg-r2ghidra"
+    },
+    {
+      "relationshipType": "BUILD_DEPENDENCY_OF",
+      "spdxElementId": "SPDXRef-com.github.zeux-pugixml",
+      "relatedSpdxElement": "SPDXRef-com.github.radareorg-r2ghidra"
+    }
+  ]
+}

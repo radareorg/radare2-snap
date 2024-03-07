@@ -1,0 +1,57 @@
+{
+  "SPDXID": "SPDXRef-DOCUMENT",
+  "spdxVersion": "SPDX-2.3",
+  "creationInfo": {
+    "created": "2024-03-07T14:00:00Z",
+    "creators": [ "Organization: radare org" ]
+  },
+  "name": "r2frida",
+  "dataLicense": "CC0-1.0",
+  "documentDescribes": [
+    "SPDXRef-com.github.nowsecure-r2frida"
+  ],
+  "documentNamespace": "https://github.com/radareorg/radare2-snap/sbom/r2frida-${R2_SNAP_COMMIT}",
+  "packages": [
+    {
+      "SPDXID": "SPDXRef-com.github.nowsecure-r2frida",
+      "name": "r2frida",
+      "versionInfo": "${R2FRIDA_VERSION}",
+      "downloadLocation": "git+https://github.com/nowsecure/r2frida#${R2FRIDA_VERSION}",
+      "filesAnalyzed": false,
+      "licenseDeclared": "MIT",
+      "supplier": "Organization: NowSecure",
+      "primaryPackagePurpose": "LIBRARY",
+      "externalRefs": [
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceType": "purl",
+          "referenceLocator": "pkg:github/nowsecure/r2frida@${R2FRIDA_VERSION}"
+        }
+      ]
+    },
+    {
+      "SPDXID": "SPDXRef-com.github.frida-frida-frida-core-devkit",
+      "name": "frida-core-devkit",
+      "versionInfo": "",
+      "downloadLocation": "https://github.com/frida/frida/releases",
+      "primaryPackagePurpose": "LIBRARY",
+      "filesAnalyzed": false,
+      "licenseDeclared": "GPL-2.0-or-later WITH WxWindows-exception-3.1",
+      "supplier": "Organization: Frida",
+      "externalRefs": [
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceType": "purl",
+          "referenceLocator": "pkg:github/frida/frida"
+        }
+      ]
+    }
+  ],
+  "relationships": [
+    {
+      "relationshipType": "BUILD_DEPENDENCY_OF",
+      "spdxElementId": "SPDXRef-com.github.frida-frida-frida-core-devkit",
+      "relatedSpdxElement": "SPDXRef-com.github.nowsecure-r2frida"
+    }
+  ]
+}

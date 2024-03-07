@@ -20,6 +20,7 @@ RUN apt-get update && \
         xz-utils \
         python3-pip \
         ninja-build \
+        gettext-base \
         && \
     rm -rf /var/lib/apt/lists/* && \
     python3 -m pip install "meson~=${MESON_VERSION}" && \
@@ -35,7 +36,7 @@ ENV PREFIX="/snap/radare2/current" \
 
 COPY patches /usr/src/patches
 
-# radare2
+# Build radare2
 ARG R2_VERSION
 RUN curl -L "https://github.com/radareorg/radare2/releases/download/${R2_VERSION}/radare2-${R2_VERSION}.tar.xz" | tar -xJ && \
     cd "radare2-${R2_VERSION}" && \
@@ -43,7 +44,7 @@ RUN curl -L "https://github.com/radareorg/radare2/releases/download/${R2_VERSION
     ./configure --prefix="$PREFIX" --with-checks-level=0 && \
     make && make install
 
-# r2ghidra
+# Build r2ghidra
 ARG R2GHIDRA_VERSION
 RUN git clone --branch "$R2GHIDRA_VERSION" --recurse-submodules --depth 1 https://github.com/radareorg/r2ghidra.git && \
     cd r2ghidra && \
@@ -51,7 +52,7 @@ RUN git clone --branch "$R2GHIDRA_VERSION" --recurse-submodules --depth 1 https:
     ./configure --prefix="$PREFIX" --with-checks-level=0 && \
     make && make install
 
-# r2frida (optional)
+# Build r2frida (optional)
 ARG R2FRIDA_VERSION
 ARG FRIDA_ARCH
 RUN if [ -n "$FRIDA_ARCH" ]; then \
@@ -61,12 +62,23 @@ RUN if [ -n "$FRIDA_ARCH" ]; then \
         make frida_arch="$FRIDA_ARCH" && make install frida_arch="$FRIDA_ARCH"; \
     fi
 
-# r2dec
+# Build r2dec
 ARG R2DEC_VERSION
 RUN git clone --branch "$R2DEC_VERSION" --recurse-submodules --depth 1 https://github.com/wargio/r2dec-js.git && \
     cd r2dec-js/p && \
     meson setup --prefix "$PREFIX" -Djsc_folder=".." build && \
     ninja -C build install
+
+# Generate SBOM files
+ARG R2_SNAP_COMMIT
+COPY sbom /usr/src/sbom
+RUN mkdir -p "$PREFIX/share/sbom/"; \
+    SBOMS="radare2-snap radare2 r2ghidra r2dec"; \
+    [ -n "$FRIDA_ARCH" ] && SBOMS="$SBOMS r2frida"; \
+    for c in $SBOMS; do \
+        echo "Generate SBOM for $c..."; \
+        envsubst < "/usr/src/sbom/$c.spdx.json.in" > "$PREFIX/share/sbom/$c.spdx.json"; \
+    done
 
 ## Final build: patch elfs and generate metadata
 FROM --platform=$BUILDPLATFORM "alpine:${ALPINE_VERSION}" as builder
