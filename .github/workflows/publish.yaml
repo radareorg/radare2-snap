@@ -107,11 +107,3 @@ jobs:
       
       - name: Create manifest list and push
         run: make docker-push-multiarch REGISTRY_IMAGE=${{ vars.DOCKERHUB_REPO }} DOCKER_TAG=latest
-    
-      - name: Download SBOM
-        run: docker scout sbom --format spdx --output sbom.spdx registry://${{ vars.DOCKERHUB_REPO }}@$(cat digests/amd64.iidfile)
-
-      - name: Upload SBOM to GitHub dependency submission API
-        uses: advanced-security/spdx-dependency-submission-action@v0.0.1
-        with:
-          filePath: sbom.spdx
