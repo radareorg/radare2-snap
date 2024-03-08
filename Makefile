@@ -86,12 +86,6 @@ docker-push-multiarch: digests
 		--tag "$(REGISTRY_IMAGE):$(R2_VERSION)" \
 			$(shell awk '{print "$(REGISTRY_IMAGE)@"$$0}' digests/*.iidfile)
 
-# Sign images
-cosign-sign: digests
-	cosign sign $(COSIGN_ARGS) \
-		--annotations tag=$(R2_VERSION) \
-		$(shell awk '{print "$(REGISTRY_IMAGE)@"$$0}' digests/*.iidfile)
-
 # GitHub Actions scripts
 update:
 	.github/scripts/update-versions.sh

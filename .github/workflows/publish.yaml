@@ -117,4 +117,4 @@ jobs:
         uses: sigstore/cosign-installer@v3.4.0
 
       - name: Sign the images with GitHub OIDC Token
-        run: make cosign-sign REGISTRY_IMAGE=${{ vars.DOCKERHUB_REPO }} COSIGN_ARGS=--yes
+        run: cosign sign --yes --recursive ${{ vars.DOCKERHUB_REPO }}:latest
