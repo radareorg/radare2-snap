@@ -101,6 +101,9 @@ jobs:
           pattern: docker-digest-*
           merge-multiple: true
 
+      - name: Install Cosign
+        uses: sigstore/cosign-installer@v3.4.0
+
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
 
@@ -112,9 +115,6 @@ jobs:
       
       - name: Create manifest list and push
         run: make docker-push-multiarch REGISTRY_IMAGE=${{ vars.DOCKERHUB_REPO }} DOCKER_TAG=latest
-
-      - name: Install Cosign
-        uses: sigstore/cosign-installer@v3.4.0
 
       - name: Sign the images with GitHub OIDC Token
         run: cosign sign --yes --recursive ${{ vars.DOCKERHUB_REPO }}:latest
