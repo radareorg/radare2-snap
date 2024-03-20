@@ -23,7 +23,7 @@ RUN apt-get update && \
         ninja-build \
         gettext-base \
         && \
-    rm -rf /var/lib/apt/lists/* && \
+    rm -rf /var/lib/apt/lists/* /usr/lib/python*/EXTERNALLY-MANAGED && \
     python3 -m pip install "meson~=${MESON_VERSION}" && \
     mkdir -p "/snap/${BASE_SNAP}" && \
     ln -s "/" "/snap/${BASE_SNAP}/current"
