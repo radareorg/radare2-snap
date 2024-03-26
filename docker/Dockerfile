@@ -144,8 +144,8 @@ RUN apt-get update && \
     pip3 install --no-cache-dir r2pipe
 
 # Add image labels
-ARG R2_VERSION
 ARG R2_SNAP_COMMIT
+ARG BASE_IMAGE
 LABEL org.opencontainers.image.title="radare2" \
       org.opencontainers.image.description="UNIX-like reverse engineering framework and command-line toolset" \
       org.opencontainers.image.ref.name="radare/radare2" \
@@ -153,8 +153,10 @@ LABEL org.opencontainers.image.title="radare2" \
       org.opencontainers.image.vendor="radareorg" \
       org.opencontainers.image.licenses="LGPL-3.0-only" \
       org.opencontainers.image.url="https://www.radare.org/" \
+      org.opencontainers.image.documentation="https://github.com/radareorg/radare2-snap/blob/main/README-containers.md" \
       org.opencontainers.image.source="https://github.com/radareorg/radare2-snap" \
-      org.opencontainers.image.revision="${R2_SNAP_COMMIT}"
+      org.opencontainers.image.revision="${R2_SNAP_COMMIT}" \
+      org.opencontainers.image.base.name="${BASE_IMAGE}"
 
 # Copy uncompressed snap files
 ARG SNAP_ARCH
