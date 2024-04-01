@@ -35,13 +35,10 @@ ENV PREFIX="/snap/radare2/current" \
     PKG_CONFIG_PATH="/snap/radare2/current/lib/pkgconfig" \
     CFLAGS="-O3"
 
-COPY patches /usr/src/patches
-
 # Build radare2
 ARG R2_VERSION
 RUN curl -L "https://github.com/radareorg/radare2/releases/download/${R2_VERSION}/radare2-${R2_VERSION}.tar.xz" | tar -xJ && \
     cd "radare2-${R2_VERSION}" && \
-    patch -p1 < "/usr/src/patches/configure.patch" && \
     ./configure --prefix="$PREFIX" --with-checks-level=0 && \
     make && make install
 
