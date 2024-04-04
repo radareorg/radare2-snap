@@ -62,9 +62,8 @@ RUN if [ -n "$FRIDA_ARCH" ]; then \
 
 # Build r2dec
 ARG R2DEC_VERSION
-RUN git clone --recurse-submodules https://github.com/wargio/r2dec-js.git && \
+RUN git clone --branch "$R2DEC_VERSION" --recurse-submodules --depth 1 https://github.com/wargio/r2dec-js.git && \
     cd r2dec-js && \
-    git checkout "$R2DEC_VERSION" && \
     meson setup --prefix "$PREFIX" build && \
     ninja -C build install
 
