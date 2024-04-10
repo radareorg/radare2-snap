@@ -85,6 +85,48 @@ make -C dist/docker R2PM=radius2
 
 Also, you can select the architecture (amd64 / arm64) to compile the image by using the `ARCH` make variable.
 
+## Run a container as r2web server
+
+By default both images are intended to be used in a interactive terminal.
+
+But both can also be launched directly to use the radare2 web UI.
+
+The do so it can be launched using the following command:
+```sh
+docker run -p 9090:9090 radare/radare2 r2 -c '=h' -
+```
+
+Or the following docker-compose structure:
+```yaml
+version: "3.8"
+services:
+  radare2:
+    image: radare/radare2
+    command: r2 -c '=h' -
+    network_mode: bridge
+    ports:
+      - "9090:9090"
+```
+
+Or if debugging functionality is required:
+```yaml
+version: "3.8"
+services:
+  radare2:
+    image: radare/radare2
+    command: r2 -c '=h' -
+    network_mode: bridge
+    ports:
+      - "9090:9090"
+    privileged: true
+    cap_add:
+      - SYS_PTRACE
+    security_opt:
+      - "seccomp=unconfined"
+      - "apparmor=unconfined"
+```
+
+
 ## Links
 
 You can read more about the project in the following links:
