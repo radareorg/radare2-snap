@@ -20,17 +20,18 @@ RUN apt-get update && \
         pkg-config \
         xz-utils \
         python3-pip \
+        python3-venv \
         ninja-build \
         gettext-base \
         && \
     rm -rf /var/lib/apt/lists/* && \
-    python3 -m pip install "meson~=${MESON_VERSION}" && \
+    python3 -m venv /opt/meson && /opt/meson/bin/pip3 install "meson~=${MESON_VERSION}" && \
     mkdir -p "/snap/${BASE_SNAP}" && \
     ln -s "/" "/snap/${BASE_SNAP}/current"
 
 WORKDIR /usr/src
 ENV PREFIX="/snap/radare2/current" \
-    PATH="/snap/radare2/current/bin:$PATH" \
+    PATH="/snap/radare2/current/bin:$PATH:/opt/meson/bin" \
     LD_LIBRARY_PATH="/snap/radare2/current/lib" \
     PKG_CONFIG_PATH="/snap/radare2/current/lib/pkgconfig" \
     CFLAGS="-O3"
