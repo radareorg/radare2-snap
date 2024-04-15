@@ -1,7 +1,7 @@
 name: Build only
 on:
   workflow_dispatch: # can be manually dispatched under GitHub's "Actions" tab 
-# pull_request:
+  pull_request:
 
 jobs:
   build:
@@ -41,15 +41,12 @@ jobs:
           compression-level: 0
   
       - name: Build docker image
-        run: make docker-buildx REGISTRY_IMAGE=localhost/radare2 DOCKER_TAG=${{ github.sha }} SNAP_ARCH=${{ matrix.arch }}
-
-      - name: Save docker image
-        run: docker image save --output radare2-docker-${{ matrix.arch }}.tar localhost/radare2:${{ github.sha }}
+        run: make docker-buildx-tarball REGISTRY_IMAGE=localhost/radare2 DOCKER_TAG=gha-${{ github.run_id }} SNAP_ARCH=${{ matrix.arch }}
 
       - name: Upload docker image
         uses: actions/upload-artifact@v4
         with:
           name: docker-${{ matrix.arch }}
-          path: radare2-docker-*.tar
+          path: docker-images/radare2-docker-*.tar
           if-no-files-found: error
           compression-level: 9

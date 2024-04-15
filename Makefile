@@ -24,7 +24,7 @@ DOCKER_BUILD_ARGS+= \
 	--build-arg R2DEC_VERSION=$(R2DEC_VERSION)
 
 .PHONY: all snap docker update clean \
-	buildx snap-buildx docker-buildx \
+	buildx snap-buildx docker-buildx docker-buildx-tarball \
 	docker-buildx-push docker-push-multiarch
 
 # Build both for local arch for testing
@@ -60,6 +60,17 @@ docker-buildx:
 	docker buildx build $(DOCKER_BUILD_ARGS) $(DOCKER_LABELS) \
 		--target docker \
 		--platform "$(TARGETPLATFORM)" \
+		--output "type=docker" \
+		--tag "$(DOCKER_IMAGE)" \
+		docker
+
+# Build crossplatform docker locally for testing
+docker-buildx-tarball:
+	mkdir -p docker-images
+	docker buildx build $(DOCKER_BUILD_ARGS) $(DOCKER_LABELS) \
+		--target docker \
+		--platform "$(TARGETPLATFORM)" \
+		--output "type=docker,dest=docker-images/radare2-docker-$(SNAP_ARCH).tar" \
 		--tag "$(DOCKER_IMAGE)" \
 		docker
 
