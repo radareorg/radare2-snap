@@ -1,0 +1,55 @@
+name: Build only
+on:
+  workflow_dispatch: # can be manually dispatched under GitHub's "Actions" tab 
+# pull_request:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        arch:
+          - amd64
+          - arm64
+          - armhf
+          - i386
+          - ppc64el
+          - riscv64
+          - s390x
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v3
+        # with:
+        #   platforms: ${{ matrix.arch }}
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Build snap
+        run: make snap-buildx SNAP_ARCH=${{ matrix.arch }}
+
+      - name: Upload snap artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: snap-${{ matrix.arch }}
+          path: snaps/radare2_*.snap
+          if-no-files-found: error
+          compression-level: 0
+  
+      - name: Build docker image
+        run: make docker-buildx REGISTRY_IMAGE=localhost/radare2 DOCKER_TAG=${{ github.sha }} SNAP_ARCH=${{ matrix.arch }}
+
+      - name: Save docker image
+        run: docker image save --output radare2-docker-${{ matrix.arch }}.tar localhost/radare2:${{ github.sha }}
+
+      - name: Upload docker image
+        uses: actions/upload-artifact@v4
+        with:
+          name: docker-${{ matrix.arch }}
+          path: radare2-docker-*.tar
+          if-no-files-found: error
+          compression-level: 9
