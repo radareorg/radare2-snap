@@ -3,4 +3,6 @@ BASE_SNAP=core22
 
 TARGETPLATFORM=linux/arm/v7
 MULTIARCH=arm-linux-gnueabihf
-FRIDA_ARCH=armhf
+# Issue building frida (temporally disabled)
+# FRIDA_ARCH=armhf
+FRIDA_ARCH=
