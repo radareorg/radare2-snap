@@ -23,6 +23,12 @@ RUN apt-get update && \
         python3-venv \
         ninja-build \
         gettext-base \
+        autoconf \
+        automake \
+        bison \
+        flex \
+        libtool \
+        libssl-dev \
         && \
     rm -rf /var/lib/apt/lists/* && \
     python3 -m venv /opt/meson && /opt/meson/bin/pip3 install "meson~=${MESON_VERSION}" && \
@@ -68,11 +74,26 @@ RUN git clone --branch "$R2DEC_VERSION" --recurse-submodules --depth 1 https://g
     meson setup --prefix "$PREFIX" build && \
     ninja -C build install
 
+# Build yara
+ARG YARA_VERSION
+RUN git clone --branch "v$YARA_VERSION" --recurse-submodules --depth 1 https://github.com/VirusTotal/yara.git && \
+    cd yara && \
+    ./bootstrap.sh && \
+    ./configure --prefix="$PREFIX" && \
+    make && make install
+
+# Build r2yara
+ARG R2YARA_VERSION
+RUN git clone --branch "$R2YARA_VERSION" --recurse-submodules --depth 1 https://github.com/radareorg/r2yara.git && \
+    cd r2yara && \
+    ./configure --prefix="$PREFIX" --with-checks-level=0 && \
+    make && make install
+
 # Generate SBOM files
 ARG R2_SNAP_COMMIT
 COPY sbom /usr/src/sbom
 RUN mkdir -p "$PREFIX/share/sbom/"; \
-    SBOMS="radare2-snap radare2 r2ghidra r2dec"; \
+    SBOMS="radare2-snap radare2 r2ghidra r2dec yara r2yara"; \
     [ -n "$FRIDA_ARCH" ] && SBOMS="$SBOMS r2frida"; \
     for c in $SBOMS; do \
         echo "Generate SBOM for $c..."; \
@@ -133,7 +154,12 @@ ARG BUILDKIT_SBOM_SCAN_STAGE=true
 
 # Create non-root user
 RUN apt-get update && \
-    apt-get install -y --no-install-recommends sudo python3-pip python3-setuptools && \
+    apt-get install -y --no-install-recommends \
+        sudo \
+        openssl \
+        python3-pip \
+        python3-setuptools \
+        && \
     rm -rf /var/lib/apt/lists/* && \
     mkdir -p /var/snap/radare2/current /var/snap/radare2/common && \
     useradd -m r2 && \
