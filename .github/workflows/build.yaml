@@ -49,4 +49,4 @@ jobs:
           name: docker-${{ matrix.arch }}
           path: docker-images/radare2-docker-*.tar
           if-no-files-found: error
-          compression-level: 9
+          compression-level: 6

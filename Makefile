@@ -66,13 +66,15 @@ docker-buildx:
 		--tag "$(DOCKER_IMAGE)" \
 		docker
 
-# Build crossplatform docker locally for testing
+# Build crossplatform docker as tarball
 docker-buildx-tarball:
 	mkdir -p docker-images
-	docker buildx build $(DOCKER_BUILD_ARGS) $(DOCKER_LABELS) \
+	docker buildx build $(DOCKER_BUILD_ARGS) $(DOCKER_LABELS) $(DOCKER_ANNOTATIONS_MANIFEST) $(DOCKER_ANNOTATIONS_INDEX) \
 		--target docker \
 		--platform "$(TARGETPLATFORM)" \
-		--output "type=docker,dest=docker-images/radare2-docker-$(SNAP_ARCH).tar" \
+		--attest type=sbom,generator=docker/buildkit-syft-scanner \
+		--attest type=provenance \
+		--output "type=oci,dest=docker-images/radare2-docker-$(SNAP_ARCH).tar" \
 		--tag "$(DOCKER_IMAGE)" \
 		docker
 
