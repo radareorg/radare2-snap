@@ -22,7 +22,6 @@ RUN apt-get update && \
         python3-pip \
         python3-venv \
         ninja-build \
-        gettext-base \
         autoconf \
         automake \
         bison \
@@ -89,41 +88,48 @@ RUN git clone --branch "$R2YARA_VERSION" --recurse-submodules --depth 1 https://
     ./configure --prefix="$PREFIX" --with-checks-level=0 && \
     make && make install
 
-# Generate SBOM files
-ARG R2_SNAP_COMMIT
-COPY sbom /usr/src/sbom
-RUN mkdir -p "$PREFIX/share/sbom/"; \
-    SBOMS="radare2-snap radare2 r2ghidra r2dec r2yara"; \
-    [ -n "$FRIDA_ARCH" ] && SBOMS="$SBOMS r2frida"; \
-    for c in $SBOMS; do \
-        echo "Generate SBOM for $c..."; \
-        envsubst < "/usr/src/sbom/$c.spdx.json.in" > "$PREFIX/share/sbom/$c.spdx.json"; \
-    done
-
 ## Final build: patch elfs and generate metadata
 FROM --platform=$BUILDPLATFORM "alpine:${ALPINE_VERSION}" as builder
 ARG BUILDKIT_SBOM_SCAN_STAGE=false
 
-RUN apk add --no-cache yq patchelf
+RUN apk add --no-cache yq gettext-envsubst patchelf
 
-ARG R2_VERSION
-ARG BASE_SNAP
-ARG SNAP_ARCH
-ARG MULTIARCH
 ENV PREFIX="/snap/radare2/current"
 COPY --from=native-builder /snap /snap
 
 # patchelf
 # An alternative to use patchelf is to build with
 # LDFLAGS="-Wl,-rpath='\$\$ORIGIN/../lib' -Wl,-dynamic-linker=${DYNAMIC_LINKER}"
+ARG R2_VERSION
+ARG BASE_SNAP
+ARG MULTIARCH
 RUN BASE_PATH="/snap/$BASE_SNAP/current" LIBRARY_PATH="$BASE_PATH/lib/$MULTIARCH" DYNAMIC_LINKER=$(patchelf --print-interpreter "$PREFIX/bin/radare2") && \
     find "$PREFIX/bin" -maxdepth 1 -type f -exec patchelf --set-interpreter "${BASE_PATH}${DYNAMIC_LINKER}" --force-rpath --set-rpath "\$ORIGIN/../lib:$LIBRARY_PATH" \{\} \+ && \
     find "$PREFIX/lib" -maxdepth 1 -name \*.so\* -type f -exec patchelf --force-rpath --set-rpath "\$ORIGIN:$LIBRARY_PATH" \{\} \+ && \
     find "$PREFIX/lib/radare2/$R2_VERSION" -maxdepth 1 -name \*.so\* -type f -exec patchelf --force-rpath --set-rpath "\$ORIGIN/../..:$LIBRARY_PATH" \{\} \+
 
+# Generate SBOM files
+ARG FRIDA_ARCH
+ARG R2_SNAP_COMMIT
+ARG R2DEC_VERSION
+ARG R2FRIDA_VERSION
+ARG R2GHIDRA_VERSION
+ARG R2YARA_VERSION
+ARG YARA_VERSION
+COPY sbom /usr/src/sbom
+RUN set -e; \
+    OUT_DIR="$PREFIX/share/sbom"; mkdir -p "$OUT_DIR"; cd "/usr/src/sbom"; \
+    for IN_SPDX in *.spdx.*.in; do PKG_SPDX="${IN_SPDX%.spdx.*}"; \
+        [ "$PKG_SPDX" = "r2frida" -a -z "$FRIDA_ARCH" ] && continue; \
+        OUT_SPDX="${OUT_DIR}/${IN_SPDX%.in}"; \
+        echo "Generate SBOM from ${IN_SPDX} to ${OUT_SPDX}..."; \
+        envsubst < "$IN_SPDX" > "$OUT_SPDX"; \
+    done
+
 # Create snap metadata and docker alias
 COPY meta "$PREFIX/meta"
 COPY "command.sh" /snap/bin/radare2
+ARG SNAP_ARCH
 RUN set -ex; \
     yq eval -i ".version=\"$R2_VERSION\" | .base=\"$BASE_SNAP\" | .architectures=[\"$SNAP_ARCH\"]" "$PREFIX/meta/snap.yaml"; \
     for f in "$PREFIX/bin/"* ; do c=$(basename "$f"); \
