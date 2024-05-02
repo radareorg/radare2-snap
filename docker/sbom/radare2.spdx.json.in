@@ -59,7 +59,6 @@
     {
       "SPDXID": "SPDXRef-com.github.radareorg-vector35-arch-arm64",
       "name": "binaryninja-arch-arm64",
-      "versionInfo": "",
       "downloadLocation": "git+https://github.com/radareorg/vector35-arch-arm64",
       "filesAnalyzed": false,
       "licenseDeclared": "Apache-2.0",
@@ -81,7 +80,6 @@
     {
       "SPDXID": "SPDXRef-com.github.radareorg-vector35-arch-armv7",
       "name": "binaryninja-arch-armv7",
-      "versionInfo": "",
       "downloadLocation": "git+https://github.com/radareorg/vector35-arch-armv7",
       "filesAnalyzed": false,
       "licenseDeclared": "Apache-2.0",

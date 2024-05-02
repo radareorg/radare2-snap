@@ -32,7 +32,6 @@
     {
       "SPDXID": "SPDXRef-com.github.frida-frida-frida-core-devkit",
       "name": "frida-core-devkit",
-      "versionInfo": "",
       "downloadLocation": "https://github.com/frida/frida/releases",
       "primaryPackagePurpose": "LIBRARY",
       "filesAnalyzed": false,

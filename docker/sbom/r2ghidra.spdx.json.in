@@ -32,7 +32,6 @@
     {
       "SPDXID": "SPDXRef-com.github.radareorg-ghidra-native",
       "name": "ghidra-native",
-      "versionInfo": "",
       "downloadLocation": "git+https://github.com/radareorg/ghidra-native",
       "filesAnalyzed": false,
       "licenseDeclared": "Apache-2.0",
