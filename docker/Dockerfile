@@ -74,15 +74,15 @@ RUN git clone --branch "$R2DEC_VERSION" --recurse-submodules --depth 1 https://g
     meson setup --prefix "$PREFIX" build && \
     ninja -C build install
 
-# Build yara
+# Build r2yara
+## Compile yara dependency
 ARG YARA_VERSION
 RUN git clone --branch "v$YARA_VERSION" --recurse-submodules --depth 1 https://github.com/VirusTotal/yara.git && \
     cd yara && \
     ./bootstrap.sh && \
     ./configure --prefix="$PREFIX" && \
     make && make install
-
-# Build r2yara
+## Compile r2yara plugin
 ARG R2YARA_VERSION
 RUN git clone --branch "$R2YARA_VERSION" --recurse-submodules --depth 1 https://github.com/radareorg/r2yara.git && \
     cd r2yara && \
@@ -93,7 +93,7 @@ RUN git clone --branch "$R2YARA_VERSION" --recurse-submodules --depth 1 https://
 ARG R2_SNAP_COMMIT
 COPY sbom /usr/src/sbom
 RUN mkdir -p "$PREFIX/share/sbom/"; \
-    SBOMS="radare2-snap radare2 r2ghidra r2dec yara r2yara"; \
+    SBOMS="radare2-snap radare2 r2ghidra r2dec r2yara"; \
     [ -n "$FRIDA_ARCH" ] && SBOMS="$SBOMS r2frida"; \
     for c in $SBOMS; do \
         echo "Generate SBOM for $c..."; \

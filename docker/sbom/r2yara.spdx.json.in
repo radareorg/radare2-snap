@@ -2,7 +2,7 @@
   "SPDXID": "SPDXRef-DOCUMENT",
   "spdxVersion": "SPDX-2.3",
   "creationInfo": {
-    "created": "2024-03-07T14:00:00Z",
+    "created": "2024-05-02T15:00:00Z",
     "creators": [ "Organization: radare org" ]
   },
   "name": "r2yara",
@@ -28,6 +28,35 @@
           "referenceLocator": "pkg:github/radareorg/r2yara@${R2YARA_VERSION}"
         }
       ]
+    },
+    {
+      "SPDXID": "SPDXRef-com.github.virustotal-yara",
+      "name": "yara",
+      "versionInfo": "${YARA_VERSION}",
+      "downloadLocation": "git+https://github.com/VirusTotal/yara#${YARA_VERSION}",
+      "filesAnalyzed": false,
+      "licenseDeclared": "BSD-3-Clause",
+      "supplier": "Organization: VirusTotal",
+      "primaryPackagePurpose": "LIBRARY",
+      "externalRefs": [
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceType": "purl",
+          "referenceLocator": "pkg:github/VirusTotal/yara@${YARA_VERSION}"
+        },
+        {
+          "referenceCategory" : "SECURITY",
+          "referenceLocator" : "cpe:2.3:a:virustotal:yara:${YARA_VERSION}:*:*:*:*:*:*:*",
+          "referenceType" : "cpe23Type"
+        }
+      ]
+    }
+  ],
+  "relationships": [
+    {
+      "relationshipType": "DEPENDENCY_OF",
+      "spdxElementId": "SPDXRef-com.github.virustotal-yara",
+      "relatedSpdxElement": "SPDXRef-com.github.radareorg-r2yara"
     }
   ]
 }
