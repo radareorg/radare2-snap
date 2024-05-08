@@ -3,7 +3,6 @@ ARG ALPINE_VERSION=3.19
 
 ## Native build cross platform
 FROM "$BASE_IMAGE" as native-builder
-ARG BUILDKIT_SBOM_SCAN_STAGE=false
 
 ARG BASE_SNAP
 ARG MESON_VERSION
@@ -90,7 +89,6 @@ RUN git clone --branch "$R2YARA_VERSION" --recurse-submodules --depth 1 https://
 
 ## Final build: patch elfs and generate metadata
 FROM --platform=$BUILDPLATFORM "alpine:${ALPINE_VERSION}" as builder
-ARG BUILDKIT_SBOM_SCAN_STAGE=false
 
 RUN apk add --no-cache yq gettext-envsubst patchelf
 
@@ -139,7 +137,6 @@ RUN set -ex; \
 
 ## Build snap file
 FROM --platform=$BUILDPLATFORM "alpine:${ALPINE_VERSION}" as snapbuilder
-ARG BUILDKIT_SBOM_SCAN_STAGE=false
 
 RUN apk add --no-cache squashfs-tools
 COPY --from=builder /snap/radare2/current /snap/radare2/current
@@ -150,13 +147,11 @@ RUN mksquashfs /snap/radare2/current "/root/radare2_${R2_VERSION}_${SNAP_ARCH}.s
 
 ## Export snap file
 FROM --platform=$BUILDPLATFORM scratch as snap
-ARG BUILDKIT_SBOM_SCAN_STAGE=false
 
 COPY --from=snapbuilder /root/*.snap /
 
 ## Docker final image
 FROM "${BASE_IMAGE}" as docker
-ARG BUILDKIT_SBOM_SCAN_STAGE=true
 
 # Create non-root user
 RUN apt-get update && \
