@@ -117,4 +117,4 @@ jobs:
         run: make docker-push-multiarch REGISTRY_IMAGE=${{ vars.DOCKERHUB_REPO }} DOCKER_TAG=latest
 
       - name: Sign the images with GitHub OIDC Token
-        run: cosign sign --yes --recursive ${{ vars.DOCKERHUB_REPO }}:latest
+        run: cosign sign --yes --recursive --registry-referrers-mode=oci-1-1 ${{ vars.DOCKERHUB_REPO }}:latest
