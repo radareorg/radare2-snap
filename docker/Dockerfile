@@ -1,5 +1,5 @@
 ARG BASE_IMAGE
-ARG ALPINE_VERSION=3.19
+ARG ALPINE_VERSION=3.20
 
 ## Native build cross platform
 FROM "$BASE_IMAGE" as native-builder
@@ -90,7 +90,7 @@ RUN git clone --branch "$R2YARA_VERSION" --recurse-submodules --depth 1 https://
 ## Final build: patch elfs and generate metadata
 FROM --platform=$BUILDPLATFORM "alpine:${ALPINE_VERSION}" as builder
 
-RUN apk add --no-cache yq gettext-envsubst patchelf
+RUN apk add --no-cache yq-go gettext-envsubst patchelf
 
 ENV PREFIX="/snap/radare2/current"
 COPY --from=native-builder /snap /snap
