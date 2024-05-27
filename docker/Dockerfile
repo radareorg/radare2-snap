@@ -62,7 +62,7 @@ RUN if [ -n "$FRIDA_ARCH" ]; then \
         git clone --branch "$R2FRIDA_VERSION" --recurse-submodules --depth 1 https://github.com/nowsecure/r2frida.git && \
         cd r2frida && \
         ./configure --prefix="$PREFIX" --with-checks-level=0 && \
-        make frida_arch="$FRIDA_ARCH" && make install frida_arch="$FRIDA_ARCH"; \
+        R2PM_OFFLINE="yes" make frida_arch="$FRIDA_ARCH" && make install frida_arch="$FRIDA_ARCH"; \
     fi
 
 # Build r2dec
