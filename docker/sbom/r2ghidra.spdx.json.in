@@ -16,7 +16,7 @@
       "SPDXID": "SPDXRef-com.github.radareorg-r2ghidra",
       "name": "r2ghidra",
       "versionInfo": "${R2GHIDRA_VERSION}",
-      "downloadLocation": "git+https://github.com/radareorg/r2ghidra#${R2GHIDRA_VERSION}",
+      "downloadLocation": "https://github.com/radareorg/r2ghidra/releases/download/${R2GHIDRA_VERSION}/r2ghidra-${R2GHIDRA_VERSION}.tar.xz",
       "filesAnalyzed": false,
       "licenseDeclared": "LGPL-3.0-only",
       "supplier": "Organization: radare org",

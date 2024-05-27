@@ -16,7 +16,7 @@
       "SPDXID": "SPDXRef-com.github.wargio-r2dec-js",
       "name": "r2dec",
       "versionInfo": "${R2DEC_VERSION}",
-      "downloadLocation": "git+https://github.com/wargio/r2dec-js#${R2DEC_VERSION}",
+      "downloadLocation": "https://github.com/wargio/r2dec-js/archive/refs/tags/${R2DEC_VERSION}.tar.gz",
       "filesAnalyzed": false,
       "licenseDeclared": "MIT AND BSD-3-Clause",
       "supplier": "Person: Giovanni Dante Grazioli",

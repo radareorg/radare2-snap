@@ -16,12 +16,18 @@
       "SPDXID": "SPDXRef-com.github.nowsecure-r2frida",
       "name": "r2frida",
       "versionInfo": "${R2FRIDA_VERSION}",
-      "downloadLocation": "git+https://github.com/nowsecure/r2frida#${R2FRIDA_VERSION}",
+      "downloadLocation": "https://github.com/nowsecure/r2frida/archive/refs/tags/${R2FRIDA_VERSION}.tar.gz",
       "filesAnalyzed": false,
       "licenseDeclared": "MIT",
       "supplier": "Organization: NowSecure",
       "primaryPackagePurpose": "LIBRARY",
       "externalRefs": [
+        {
+          "referenceCategory": "OTHER",
+          "referenceType": "url",
+          "referenceLocator": "https://github.com/nowsecure/r2frida/releases/download/${R2FRIDA_VERSION}/_agent.js",
+          "comment": "Release r2frida prebuild _agent.js"
+        },
         {
           "referenceCategory": "PACKAGE-MANAGER",
           "referenceType": "purl",

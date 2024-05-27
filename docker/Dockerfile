@@ -49,8 +49,8 @@ RUN curl -L "https://github.com/radareorg/radare2/releases/download/${R2_VERSION
 
 # Build r2ghidra
 ARG R2GHIDRA_VERSION
-RUN git clone --branch "$R2GHIDRA_VERSION" --recurse-submodules --depth 1 https://github.com/radareorg/r2ghidra.git && \
-    cd r2ghidra && \
+RUN curl -L "https://github.com/radareorg/r2ghidra/releases/download/${R2GHIDRA_VERSION}/r2ghidra-${R2GHIDRA_VERSION}.tar.xz" | tar -xJ && \
+    cd "r2ghidra-${R2GHIDRA_VERSION}" && \
     ./preconfigure && \
     ./configure --prefix="$PREFIX" --with-checks-level=0 && \
     make && make install
@@ -59,32 +59,33 @@ RUN git clone --branch "$R2GHIDRA_VERSION" --recurse-submodules --depth 1 https:
 ARG R2FRIDA_VERSION
 ARG FRIDA_ARCH
 RUN if [ -n "$FRIDA_ARCH" ]; then \
-        export R2PM_OFFLINE="yes"; \
-        git clone --branch "$R2FRIDA_VERSION" --recurse-submodules --depth 1 https://github.com/nowsecure/r2frida.git && \
-        cd r2frida && \
+        curl -L "https://github.com/nowsecure/r2frida/archive/refs/tags/${R2FRIDA_VERSION}.tar.gz" | tar -xz && \
+        cd "r2frida-${R2FRIDA_VERSION}" && \
         ./configure --prefix="$PREFIX" --with-checks-level=0 && \
-        make frida_arch="$FRIDA_ARCH" && make install frida_arch="$FRIDA_ARCH"; \
+        make frida_arch="$FRIDA_ARCH" R2FRIDA_PRECOMPILED_AGENT=1 \
+            R2FRIDA_PRECOMPILED_AGENT_URL="https://github.com/nowsecure/r2frida/releases/download/${R2FRIDA_VERSION}/_agent.js" && \
+        make install frida_arch="$FRIDA_ARCH"; \
     fi
 
 # Build r2dec
 ARG R2DEC_VERSION
-RUN git clone --branch "$R2DEC_VERSION" --recurse-submodules --depth 1 https://github.com/wargio/r2dec-js.git && \
-    cd r2dec-js && \
+RUN curl -L "https://github.com/wargio/r2dec-js/archive/refs/tags/${R2DEC_VERSION}.tar.gz" | tar -xz && \
+    cd "r2dec-js-${R2DEC_VERSION}" && \
     meson setup --prefix "$PREFIX" build && \
     ninja -C build install
 
 # Build r2yara
 ## Compile yara dependency
 ARG YARA_VERSION
-RUN git clone --branch "v$YARA_VERSION" --recurse-submodules --depth 1 https://github.com/VirusTotal/yara.git && \
-    cd yara && \
+RUN curl -L "https://github.com/VirusTotal/yara/archive/refs/tags/v${YARA_VERSION}.tar.gz" | tar -xz && \
+    cd "yara-${YARA_VERSION}" && \
     ./bootstrap.sh && \
     ./configure --prefix="$PREFIX" && \
     make && make install
 ## Compile r2yara plugin
 ARG R2YARA_VERSION
-RUN git clone --branch "$R2YARA_VERSION" --recurse-submodules --depth 1 https://github.com/radareorg/r2yara.git && \
-    cd r2yara && \
+RUN curl -L "https://github.com/radareorg/r2yara/archive/refs/tags/${R2YARA_VERSION}.tar.gz" | tar -xz && \
+    cd "r2yara-${R2YARA_VERSION}" && \
     ./configure --prefix="$PREFIX" --with-checks-level=0 && \
     make && make install
 
