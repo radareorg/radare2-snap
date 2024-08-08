@@ -30,19 +30,19 @@ The resulting build includes the following projects:
 ### Run
 
 To use this docker image you can use either:
-```
+```sh
 docker run -ti radare/radare2
 podman run -ti docker.io/radare/radare2
 nerdctl run -ti radare/radare2
 ```
 
 To use the docker image as one shot so it removes everything inside the container on exit just add `--rm` as follows:
-```
+```sh
 docker run --rm -ti radare/radare2
 ```
 
 Another example to use for debugging inside the docker:
-```
+```sh
 docker run --tty --interactive --privileged --cap-add=SYS_PTRACE --security-opt seccomp=unconfined --security-opt apparmor=unconfined radare/radare2
 ```
 
