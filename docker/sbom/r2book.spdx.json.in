@@ -1,0 +1,33 @@
+{
+  "SPDXID": "SPDXRef-DOCUMENT",
+  "spdxVersion": "SPDX-2.3",
+  "creationInfo": {
+    "created": "2024-05-02T15:00:00Z",
+    "creators": [ "Organization: radare org" ]
+  },
+  "name": "r2book",
+  "dataLicense": "CC0-1.0",
+  "documentDescribes": [
+    "SPDXRef-com.github.radareorg-r2book"
+  ],
+  "documentNamespace": "https://github.com/radareorg/radare2-snap/sbom/r2book-${R2_SNAP_COMMIT}",
+  "packages": [
+    {
+      "SPDXID": "SPDXRef-com.github.radareorg-r2book",
+      "name": "r2book",
+      "versionInfo": "${R2BOOK_VERSION}",
+      "downloadLocation": "https://github.com/radareorg/radare2-book/releases/download/${R2BOOK_VERSION}/r2book.info.gz",
+      "filesAnalyzed": false,
+      "licenseDeclared": "CC-BY-SA-4.0",
+      "supplier": "Organization: radare org",
+      "primaryPackagePurpose": "FILE",
+      "externalRefs": [
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceType": "purl",
+          "referenceLocator": "pkg:github/radareorg/radare2-book@${R2BOOK_VERSION}"
+        }
+      ]
+    }
+  ]
+}

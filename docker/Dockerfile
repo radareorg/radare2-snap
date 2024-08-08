@@ -89,6 +89,11 @@ RUN curl -L "https://github.com/radareorg/r2yara/archive/refs/tags/${R2YARA_VERS
     ./configure --prefix="$PREFIX" --with-checks-level=0 && \
     make && make install
 
+# Add r2book
+ARG R2BOOK_VERSION
+RUN mkdir -p "$PREFIX/share/info" && \
+    curl -Lo "$PREFIX/share/info/r2book.info.gz" "https://github.com/radareorg/radare2-book/releases/download/${R2BOOK_VERSION}/r2book.info.gz"
+
 ## Final build: patch elfs and generate metadata
 FROM --platform=$BUILDPLATFORM "alpine:${ALPINE_VERSION}" as builder
 
@@ -116,6 +121,7 @@ ARG R2FRIDA_VERSION
 ARG R2GHIDRA_VERSION
 ARG R2YARA_VERSION
 ARG YARA_VERSION
+ARG R2BOOK_VERSION
 COPY sbom /usr/src/sbom
 RUN set -e; \
     OUT_DIR="$PREFIX/share/sbom"; mkdir -p "$OUT_DIR"; cd "/usr/src/sbom"; \
@@ -159,6 +165,7 @@ FROM "${BASE_IMAGE}" as docker
 RUN apt-get update && \
     apt-get install -y --no-install-recommends \
         sudo \
+        info \
         openssl \
         python3-pip \
         python3-setuptools \
@@ -182,6 +189,7 @@ ENV HOME="/home/r2" \
     PATH="/home/r2/.local/share/radare2/prefix/bin:/snap/radare2/current/bin:/snap/bin:${PATH}" \
     LD_LIBRARY_PATH="/home/r2/.local/share/radare2/prefix/lib:/snap/radare2/current/lib" \
     PKG_CONFIG_PATH="/home/r2/.local/share/radare2/prefix/lib/pkgconfig:/snap/radare2/current/lib/pkgconfig" \
+    INFOPATH="/snap/radare2/current/share/info:" \
     R2_PREFIX="/snap/radare2/current" \
     SNAP="/snap/radare2/current" \
     SNAP_NAME="radare2" \

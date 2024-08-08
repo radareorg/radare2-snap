@@ -23,7 +23,8 @@ DOCKER_BUILD_ARGS+= \
 	--build-arg R2FRIDA_VERSION=$(R2FRIDA_VERSION) \
 	--build-arg R2DEC_VERSION=$(R2DEC_VERSION) \
 	--build-arg YARA_VERSION=$(YARA_VERSION) \
-	--build-arg R2YARA_VERSION=$(R2YARA_VERSION)
+	--build-arg R2YARA_VERSION=$(R2YARA_VERSION) \
+	--build-arg R2BOOK_VERSION=$(R2BOOK_VERSION)
 
 .PHONY: all snap docker update clean \
 	buildx snap-buildx docker-buildx docker-buildx-tarball \
