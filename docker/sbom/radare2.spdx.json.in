@@ -2,7 +2,7 @@
   "SPDXID": "SPDXRef-DOCUMENT",
   "spdxVersion": "SPDX-2.3",
   "creationInfo": {
-    "created": "2024-03-07T14:00:00Z",
+    "created": "2024-08-08T23:43:00Z",
     "creators": [ "Organization: radare org" ]
   },
   "name": "radare2",
@@ -37,7 +37,7 @@
     {
       "SPDXID": "SPDXRef-com.github.capstone-engine-capstone",
       "name": "capstone",
-      "versionInfo": "5.0.0-rc2",
+      "versionInfo": "5.0.2",
       "downloadLocation": "git+https://github.com/capstone-engine/capstone",
       "filesAnalyzed": false,
       "licenseDeclared": "BSD-3-Clause",
@@ -51,7 +51,7 @@
         },
         {
           "referenceCategory" : "SECURITY",
-          "referenceLocator" : "cpe:2.3:a:capstone-engine:capstone:5.0.0:rc2:*:*:*:*:*:*",
+          "referenceLocator" : "cpe:2.3:a:capstone-engine:capstone:5.0.2:*:*:*:*:*:*:*",
           "referenceType" : "cpe23Type"
         }
       ]
