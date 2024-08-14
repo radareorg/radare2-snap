@@ -1,0 +1,27 @@
+name: Publish SBOM
+on:
+  workflow_dispatch: # can be manually dispatched under GitHub's "Actions" tab 
+
+jobs:
+  sbom:
+    runs-on: ubuntu-latest
+    permissions: 
+      id-token: write
+      contents: write
+    steps:     
+      - name: Install Syft
+        uses: anchore/sbom-action/download-syft@v0
+
+      - name: Generate SBOM with Syft from latest AMD64 image
+        run: syft scan registry:${{ vars.DOCKERHUB_REPO }}@latest --platform linux/amd64 --select-catalogers "+sbom-cataloger" --output spdx-json=sbom.spdx.json
+
+      - name: Upload SBOM artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: docker-sbom
+          path: sbom.spdx.json
+
+      - name: Upload SBOM to GitHub dependency submission API
+        uses: advanced-security/spdx-dependency-submission-action@v0.1.1
+        with:
+          filePath: sbom.spdx.json
