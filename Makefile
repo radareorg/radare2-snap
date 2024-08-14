@@ -73,8 +73,7 @@ docker-buildx-tarball:
 	docker buildx build $(DOCKER_BUILD_ARGS) $(DOCKER_LABELS) $(DOCKER_ANNOTATIONS_MANIFEST) $(DOCKER_ANNOTATIONS_INDEX) \
 		--target docker \
 		--platform "$(TARGETPLATFORM)" \
-		--attest type=sbom,generator=docker/buildkit-syft-scanner \
-		--attest type=provenance \
+		--attest type=provenance,mode=max \
 		--output "type=oci,dest=docker-images/radare2-docker-$(SNAP_ARCH).tar" \
 		--tag "$(DOCKER_IMAGE)" \
 		docker
@@ -86,8 +85,7 @@ docker-buildx-push:
 		--target docker \
 		--platform "$(TARGETPLATFORM)" \
 		--iidfile "digests/$(SNAP_ARCH).iidfile" \
-		--attest type=sbom,generator=docker/buildkit-syft-scanner \
-		--attest type=provenance \
+		--attest type=provenance,mode=max \
 		--output "type=image,name=$(REGISTRY_IMAGE),push-by-digest=true,name-canonical=true,push=true" \
 		docker
 
