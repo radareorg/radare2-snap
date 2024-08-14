@@ -19,9 +19,11 @@ The resulting build includes the following projects:
 [![Get it from the Snap Store](https://snapcraft.io/static/images/badges/en/snap-store-black.svg)](https://snapcraft.io/radare2)
 
 Radare requires snap classic confinement, to install run:
-```
+
+```sh
 sudo snap install radare2 --classic
 ```
+
 Once installed all radare commands are available as:
 `radare2.<command>` (ex: `radare2.rasm2`).
 
@@ -29,11 +31,10 @@ To allow using radare commands without this prefix, it can be solved either by u
 Also if `r2pm` gets used it can also be useful to add the user local prefix `~/.local/share/radare2/prefix/bin`.
 
 So as an example could be somthing like this:
+
 ```sh
 PATH="$HOME/.local/share/radare2/prefix/bin:/snap/radare2/current/bin:$PATH"
 ```
-
-
 
 ## The docker image
 
