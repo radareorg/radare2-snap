@@ -2,7 +2,7 @@
   "SPDXID": "SPDXRef-DOCUMENT",
   "spdxVersion": "SPDX-2.3",
   "creationInfo": {
-    "created": "2024-05-02T15:00:00Z",
+    "created": "2024-08-08T23:49:52Z",
     "creators": [ "Organization: radare org" ]
   },
   "name": "r2book",
