@@ -46,5 +46,5 @@ jobs:
     uses: ./.github/workflows/publish.yaml
     secrets: inherit
     permissions:
-      contents: read
+      contents: write # needed to allow upload SBOM to GitHub dependency submission API
       id-token: write # needed for signing the images with GitHub OIDC Token
