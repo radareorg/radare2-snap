@@ -50,3 +50,15 @@ jobs:
           path: docker-images/radare2-docker-*.tar
           if-no-files-found: error
           compression-level: 6
+
+      - name: Install Syft
+        uses: anchore/sbom-action/download-syft@v0
+
+      - name: Generate SBOM with Syft
+        run: syft scan docker:localhost/radare2:gha-${{ github.run_id }} --select-catalogers "+sbom-cataloger" --output spdx-json=docker-${{ matrix.arch }}.spdx.json
+
+      - name: Upload SBOM artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: docker-${{ matrix.arch }}-sbom
+          path: docker-${{ matrix.arch }}.spdx.json
