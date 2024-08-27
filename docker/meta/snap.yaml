@@ -22,3 +22,17 @@ environment:
   PKG_CONFIG_PATH: $SNAP/lib/pkgconfig${PKG_CONFIG_PATH:+:$PKG_CONFIG_PATH}
   LD_LIBRARY_PATH: ${SNAP_LIBRARY_PATH}${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}:$SNAP/lib
   PATH: $SNAP/bin:$PATH
+links:
+  contact:
+    - https://github.com/radareorg/radare2#community
+  issues:
+    - https://github.com/radareorg/radare2/issues
+    - https://github.com/radareorg/r2ghidra/issues
+    - https://github.com/nowsecure/r2frida/issues
+    - https://github.com/wargio/r2dec-js/issues
+    - https://github.com/radareorg/r2yara/issues
+    - https://github.com/radareorg/radare2-snap/issues
+  source-code:
+    - https://github.com/radareorg/radare2-snap
+  website:
+    - https://www.radare.org/
