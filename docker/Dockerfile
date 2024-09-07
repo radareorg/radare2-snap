@@ -89,6 +89,12 @@ RUN curl -L "https://github.com/radareorg/r2yara/archive/refs/tags/${R2YARA_VERS
     ./configure --prefix="$PREFIX" --with-checks-level=0 && \
     make && make install
 
+# Add decai (r2ai)
+ARG R2AI_VERSION
+RUN curl -L "https://github.com/radareorg/r2ai/archive/refs/tags/${R2AI_VERSION}.tar.gz" | tar -xz && \
+    cd "r2ai-${R2AI_VERSION}" && \
+    make -C decai install
+
 # Add r2book
 ARG R2BOOK_VERSION
 RUN mkdir -p "$PREFIX/share/info" && \
