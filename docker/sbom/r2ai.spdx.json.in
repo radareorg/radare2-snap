@@ -1,0 +1,33 @@
+{
+  "SPDXID": "SPDXRef-DOCUMENT",
+  "spdxVersion": "SPDX-2.3",
+  "creationInfo": {
+    "created": "2024-09-07T14:00:00Z",
+    "creators": [ "Organization: radare org" ]
+  },
+  "name": "r2ai",
+  "dataLicense": "CC0-1.0",
+  "documentDescribes": [
+    "SPDXRef-com.github.radareorg-r2ai"
+  ],
+  "documentNamespace": "https://github.com/radareorg/radare2-snap/sbom/r2ai-${R2_SNAP_COMMIT}",
+  "packages": [
+    {
+      "SPDXID": "SPDXRef-com.github.radareorg-r2ai",
+      "name": "r2ai",
+      "versionInfo": "${R2AI_VERSION}",
+      "downloadLocation": "https://github.com/radareorg/r2ai/archive/refs/tags/${R2AI_VERSION}.tar.gz",
+      "filesAnalyzed": false,
+      "licenseDeclared": "MIT",
+      "supplier": "Organization: radareorg",
+      "primaryPackagePurpose": "LIBRARY",
+      "externalRefs": [
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceType": "purl",
+          "referenceLocator": "pkg:github/radareorg/r2ai@${R2AI_VERSION}"
+        }
+      ]
+    }
+  ]
+}
