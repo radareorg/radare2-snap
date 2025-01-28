@@ -16,7 +16,6 @@ cat << EOF > versions.mk
 R2_VERSION=$(getLatestReleaseTag radareorg/radare2)
 R2GHIDRA_VERSION=$(getLatestReleaseTag radareorg/r2ghidra)
 R2FRIDA_VERSION=$(getLatestReleaseTag nowsecure/r2frida)
-R2DEC_VERSION=$(getLatestReleaseTag wargio/r2dec-js)
 YARA_VERSION=$(getLatestReleaseTag VirusTotal/yara v)
 R2YARA_VERSION=$(getLatestReleaseTag radareorg/r2yara)
 R2AI_VERSION=$(getLatestReleaseTag radareorg/r2ai)
