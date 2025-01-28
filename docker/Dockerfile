@@ -67,13 +67,6 @@ RUN if [ -n "$FRIDA_ARCH" ]; then \
         make install frida_arch="$FRIDA_ARCH"; \
     fi
 
-# Build r2dec
-ARG R2DEC_VERSION
-RUN curl -L "https://github.com/wargio/r2dec-js/archive/refs/tags/${R2DEC_VERSION}.tar.gz" | tar -xz && \
-    cd "r2dec-js-${R2DEC_VERSION}" && \
-    meson setup --prefix "$PREFIX" build && \
-    ninja -C build install
-
 # Build r2yara
 ## Compile yara dependency
 ARG YARA_VERSION
@@ -122,7 +115,6 @@ RUN BASE_PATH="/snap/$BASE_SNAP/current" LIBRARY_PATH="$BASE_PATH/lib/$MULTIARCH
 # Generate SBOM files
 ARG FRIDA_ARCH
 ARG R2_SNAP_COMMIT
-ARG R2DEC_VERSION
 ARG R2FRIDA_VERSION
 ARG R2GHIDRA_VERSION
 ARG R2YARA_VERSION
