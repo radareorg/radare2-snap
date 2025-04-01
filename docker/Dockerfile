@@ -14,6 +14,7 @@ RUN apt-get update && \
         gcc \
         git \
         libc-dev \
+        zlib1g-dev \
         make \
         patch \
         pkg-config \
