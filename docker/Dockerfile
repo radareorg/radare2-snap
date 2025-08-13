@@ -2,7 +2,7 @@ ARG BASE_IMAGE
 ARG ALPINE_VERSION=3.20
 
 ## Native build cross platform
-FROM "$BASE_IMAGE" as native-builder
+FROM "${BASE_IMAGE}" AS native-builder
 
 ARG BASE_SNAP
 ARG MESON_VERSION
@@ -104,7 +104,7 @@ RUN mkdir -p "$PREFIX/share/info" && \
     curl -Lo "$PREFIX/share/info/r2book.info.gz" "https://github.com/radareorg/radare2-book/releases/download/${R2BOOK_VERSION}/r2book.info.gz"
 
 ## Final build: patch elfs and generate metadata
-FROM --platform=$BUILDPLATFORM "alpine:${ALPINE_VERSION}" as builder
+FROM --platform=$BUILDPLATFORM "alpine:${ALPINE_VERSION}" AS builder
 
 RUN apk add --no-cache yq-go gettext-envsubst patchelf
 
@@ -154,7 +154,7 @@ RUN set -ex; \
     done
 
 ## Build snap file
-FROM --platform=$BUILDPLATFORM "alpine:${ALPINE_VERSION}" as snapbuilder
+FROM --platform=$BUILDPLATFORM "alpine:${ALPINE_VERSION}" AS snapbuilder
 
 RUN apk add --no-cache squashfs-tools
 COPY --from=builder /snap/radare2/current /snap/radare2/current
@@ -164,12 +164,12 @@ ARG SNAP_ARCH
 RUN mksquashfs /snap/radare2/current "/root/radare2_${R2_VERSION}_${SNAP_ARCH}.snap" -comp lzo -all-root -no-xattrs -no-fragments
 
 ## Export snap file
-FROM --platform=$BUILDPLATFORM scratch as snap
+FROM --platform=$BUILDPLATFORM scratch AS snap
 
 COPY --from=snapbuilder /root/*.snap /
 
 ## Docker final image
-FROM "${BASE_IMAGE}" as docker
+FROM "${BASE_IMAGE}" AS docker
 
 # Create non-root user
 RUN apt-get update && \
