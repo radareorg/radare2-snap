@@ -28,8 +28,8 @@ RUN apt-get update && \
         flex \
         libtool \
         libssl-dev \
-        npm \
         && \
+    apt-get install -y npm && \
     rm -rf /var/lib/apt/lists/* && \
     python3 -m venv /opt/meson && /opt/meson/bin/pip3 install "meson~=${MESON_VERSION}" && \
     mkdir -p "/snap/${BASE_SNAP}" && \
