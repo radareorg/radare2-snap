@@ -6,6 +6,7 @@ FROM "${BASE_IMAGE}" AS native-builder
 
 ARG BASE_SNAP
 ARG MESON_VERSION
+ARG PYTHON_VERSION
 RUN apt-get update && \
     apt-get install -y --no-install-recommends \
         ca-certificates \
@@ -19,8 +20,9 @@ RUN apt-get update && \
         patch \
         pkg-config \
         xz-utils \
+        "python${PYTHON_VERSION}" \
+        "python${PYTHON_VERSION}-venv" \
         python3-pip \
-        python3-venv \
         ninja-build \
         autoconf \
         automake \
@@ -30,6 +32,7 @@ RUN apt-get update && \
         libssl-dev \
         && \
     rm -rf /var/lib/apt/lists/* && \
+    ln -s "/usr/bin/python${PYTHON_VERSION}" /usr/local/bin/python3 && \
     python3 -m venv /opt/meson && /opt/meson/bin/pip3 install "meson~=${MESON_VERSION}" && \
     mkdir -p "/snap/${BASE_SNAP}" && \
     ln -s "/" "/snap/${BASE_SNAP}/current"
