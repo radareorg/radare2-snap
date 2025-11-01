@@ -49,7 +49,7 @@ jobs:
         run: make snap-buildx SNAP_ARCH=${{ matrix.arch }}
 
       - name: Upload artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         with:
           name: snap-${{ matrix.arch }}
           path: snaps/radare2_*.snap
@@ -67,7 +67,7 @@ jobs:
         run: make docker-buildx-push REGISTRY_IMAGE=${{ vars.DOCKERHUB_REPO }} SNAP_ARCH=${{ matrix.arch }}
 
       - name: Upload docker digest
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         with:
           name: docker-digest-${{ matrix.arch }}
           path: digests/*
@@ -148,7 +148,7 @@ jobs:
         run: syft scan registry:${{ vars.DOCKERHUB_REPO }}@$(cat amd64.iidfile) --select-catalogers "+sbom-cataloger" --output spdx-json=docker.spdx.json
 
       - name: Upload SBOM artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         with:
           name: docker-sbom
           path: docker.spdx.json

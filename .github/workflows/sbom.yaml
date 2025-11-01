@@ -30,7 +30,7 @@ jobs:
         run: syft scan registry:${{ vars.DOCKERHUB_REPO }}:latest --platform ${{ inputs.platform }} --select-catalogers "+sbom-cataloger" --output spdx-json=docker.spdx.json
 
       - name: Upload SBOM artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         with:
           name: docker-sbom
           path: docker.spdx.json
