@@ -35,7 +35,7 @@ jobs:
     steps:
       # Perform the checkout of the main branch
       - name: Checkout
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
         with:
           ref: main
 
@@ -96,7 +96,7 @@ jobs:
     steps:
       # Perform the checkout of the main branch
       - name: Checkout
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
         with:
           ref: main
 
