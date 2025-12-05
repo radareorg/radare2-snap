@@ -119,7 +119,7 @@ ARG R2_VERSION
 ARG BASE_SNAP
 ARG MULTIARCH
 RUN BASE_PATH="/snap/$BASE_SNAP/current" LIBRARY_PATH="$BASE_PATH/lib/$MULTIARCH" DYNAMIC_LINKER=$(patchelf --print-interpreter "$PREFIX/bin/radare2") && \
-    find "$PREFIX/bin" -maxdepth 1 -type f -exec patchelf --set-interpreter "${BASE_PATH}${DYNAMIC_LINKER}" --force-rpath --set-rpath "\$ORIGIN/../lib:$LIBRARY_PATH" \{\} \+ && \
+    find "$PREFIX/bin" -maxdepth 1 -type f '!' -name "clang-format-radare2" -exec patchelf --set-interpreter "${BASE_PATH}${DYNAMIC_LINKER}" --force-rpath --set-rpath "\$ORIGIN/../lib:$LIBRARY_PATH" \{\} \+ && \
     find "$PREFIX/lib" -maxdepth 1 -name \*.so\* -type f -exec patchelf --force-rpath --set-rpath "\$ORIGIN:$LIBRARY_PATH" \{\} \+ && \
     find "$PREFIX/lib/radare2/$R2_VERSION" -maxdepth 1 -name \*.so\* -type f -exec patchelf --force-rpath --set-rpath "\$ORIGIN/../..:$LIBRARY_PATH" \{\} \+
 
