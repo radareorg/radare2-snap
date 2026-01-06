@@ -21,7 +21,6 @@ jobs:
       matrix:
         arch:
           - amd64
-          - i386
           - ppc64el
           - riscv64
           - s390x
