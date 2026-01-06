@@ -3,7 +3,7 @@ DOCKER_TAG?=latest
 DOCKER_IMAGE?=$(REGISTRY_IMAGE):$(DOCKER_TAG)
 
 R2_SNAP_COMMIT:=$(shell git rev-parse --short HEAD)
-DEB_BUILD_ARCH?=$(shell type -p dpkg-architecture > /dev/null && dpkg-architecture -qDEB_BUILD_ARCH || uname -m | sed -e 's,i[0-9]86,i386,g' -e 's,x86_64,amd64,g' -e 's,armv.*,armhf,g' -e 's,aarch64,arm64,g' -e 's,ppc.+64le,ppc64el,g')
+DEB_BUILD_ARCH?=$(shell type -p dpkg-architecture > /dev/null && dpkg-architecture -qDEB_BUILD_ARCH || uname -m | sed -e 's,x86_64,amd64,g' -e 's,armv.*,armhf,g' -e 's,aarch64,arm64,g' -e 's,ppc.+64le,ppc64el,g')
 SNAP_ARCH?=$(DEB_BUILD_ARCH)
 #ARCH_CONFIGS=$(wildcard config/*.mk)
 COSIGN_ARGS?=
