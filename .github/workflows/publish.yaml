@@ -153,4 +153,4 @@ jobs:
           path: docker.spdx.json
 
       - name: Upload SBOM to GitHub dependency submission API
-        uses: advanced-security/spdx-dependency-submission-action@v0.1.1
+        uses: advanced-security/spdx-dependency-submission-action@v0.1.2
