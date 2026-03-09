@@ -1,0 +1,17 @@
+--- a/src/Makefile	2026-03-09 19:25:57.262821521 +0100
++++ b/src/Makefile	2026-03-09 19:26:26.159242178 +0100
+@@ -67,8 +67,12 @@
+ Cannot run r2
+ endif
+ 
+-subprojects-zlib:
+-	$(MAKE) -C ../subprojects zlib-static
++# zlib static build
++../subprojects/zlib/libz.a:
++	cd ../subprojects/zlib && CFLAGS="-fPIC" ./configure --static
++	$(MAKE) -C ../subprojects/zlib libz.a
++
++subprojects-zlib: ../subprojects/zlib/libz.a
+ 
+ clean:
+ 	rm -f *.o $(PUGIXML_HOME)/*.o
