@@ -53,7 +53,7 @@ RUN curl -L "https://github.com/radareorg/radare2/releases/download/${R2_VERSION
 
 # Build r2ghidra
 ARG R2GHIDRA_VERSION
-RUN curl -L "https://github.com/radareorg/r2ghidra/releases/download/${R2GHIDRA_VERSION}/r2ghidra-${R2GHIDRA_VERSION}.tar.xz" | tar -xJ && \
+RUN curl -L "https://github.com/radareorg/r2ghidra/archive/refs/tags/${R2GHIDRA_VERSION}.tar.gz" | tar -xz && \
     cd "r2ghidra-${R2GHIDRA_VERSION}" && \
     ./configure --prefix="$PREFIX" --with-checks-level=0 && \
     make && make install
