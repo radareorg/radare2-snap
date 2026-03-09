@@ -56,7 +56,7 @@ ARG R2GHIDRA_VERSION
 ADD patches/r2ghidra-zlib-offline-build.patch .
 RUN curl -L "https://github.com/radareorg/r2ghidra/releases/download/${R2GHIDRA_VERSION}/r2ghidra-${R2GHIDRA_VERSION}.tar.xz" | tar -xJ && \
     cd "r2ghidra-${R2GHIDRA_VERSION}" && \
-    patch -p1 < r2ghidra-zlib-offline-build.patch && \
+    patch -p1 < ../r2ghidra-zlib-offline-build.patch && \
     ./configure --prefix="$PREFIX" --with-checks-level=0 && \
     make && make install
 
