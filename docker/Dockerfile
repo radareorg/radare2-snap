@@ -66,7 +66,7 @@ RUN if [ -n "$FRIDA_ARCH" ]; then \
         curl -L "https://github.com/nowsecure/r2frida/archive/refs/tags/${R2FRIDA_VERSION}.tar.gz" | tar -xz && \
         cd "r2frida-${R2FRIDA_VERSION}" && \
         ./configure --prefix="$PREFIX" --with-checks-level=0 && \
-        make frida_arch="$FRIDA_ARCH" CFLAGS=-w R2FRIDA_PRECOMPILED_AGENT=1 \
+        CFLAGS=-w make frida_arch="$FRIDA_ARCH" R2FRIDA_PRECOMPILED_AGENT=1 \
             R2FRIDA_PRECOMPILED_AGENT_URL="https://github.com/nowsecure/r2frida/releases/download/${R2FRIDA_VERSION}/_agent.js" && \
         make install frida_arch="$FRIDA_ARCH"; \
     fi
