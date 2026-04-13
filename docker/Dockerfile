@@ -46,8 +46,9 @@ ENV PREFIX="/snap/radare2/current" \
 
 # Build radare2
 ARG R2_VERSION
-RUN curl -L "https://github.com/radareorg/radare2/releases/download/${R2_VERSION}/radare2-${R2_VERSION}.tar.xz" | tar -xJ && \
+RUN curl -L "https://github.com/radareorg/radare2/archive/refs/tags/${R2_VERSION}.tar.gz" | tar -xz && \
     cd "radare2-${R2_VERSION}" && \
+    ./preconfigure && \
     ./configure --prefix="$PREFIX" --with-checks-level=0 && \
     make && make install
 
