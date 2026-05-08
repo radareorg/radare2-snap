@@ -99,6 +99,13 @@ RUN curl -L "https://github.com/radareorg/r2ai/archive/refs/tags/${R2AI_VERSION}
     make -C src && make -C src install && \
     make -C decai install
 
+# Add r2mcp
+ARG R2MCP_VERSION
+RUN curl -L "https://github.com/radareorg/radare2-mcp/archive/refs/tags/${R2MCP_VERSION}.tar.gz" | tar -xz && \
+    cd "radare2-mcp-${R2MCP_VERSION}" && \
+    ./configure  --prefix="$PREFIX" --with-checks-level=0 && \
+    make -C src install
+
 # Add r2book
 ARG R2BOOK_VERSION
 RUN mkdir -p "$PREFIX/share/info" && \

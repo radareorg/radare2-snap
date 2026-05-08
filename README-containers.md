@@ -24,6 +24,7 @@ The resulting build includes the following projects:
 * [r2dec](https://github.com/wargio/r2dec-js)
 * [r2yara](https://github.com/radareorg/r2yara)
 * [r2ai](https://github.com/radareorg/r2ai)
+* [r2mcp](https://github.com/radareorg/radare2-mcp)
 * [r2pipe](https://pypi.org/project/r2pipe/) (for Python)
 * [r2book](https://github.com/radareorg/radare2-book) (as info page)
 
@@ -137,6 +138,80 @@ services:
       - "seccomp=unconfined"
       - "apparmor=unconfined"
 ```
+
+## Run a container as MCP server
+
+<details>
+<summary>Claude Desktop Integration</summary>
+
+In the Claude Desktop app, press `CMD + ,` to open the Developer settings. Edit the configuration file and restart the client after editing the JSON file as explained below:
+
+1. Locate your Claude Desktop configuration file:
+
+   - macOS: `~/Library/Application Support/Claude/claude_desktop_config.json`
+   - Windows: `%APPDATA%\Claude\claude_desktop_config.json`
+
+2. Add the following to your configuration file:
+
+```json
+{
+  "mcpServers": {
+    "radare2": {
+      "command": "docker",
+      "args": ["run", "--rm", "-i", "-v", "/tmp/data:/data", "--entrypoint", "r2mcp", "radare/radare2"]
+    }
+  }
+}
+```
+
+</details>
+
+<details>
+<summary>VS Code Integration</summary>
+
+To use r2mcp with GitHub Copilot Chat in Visual Studio Code by [adding it to your user configuration](https://code.visualstudio.com/docs/copilot/chat/mcp-servers#_add-an-mcp-server-to-your-user-configuration) (see other options [here](https://code.visualstudio.com/docs/copilot/chat/mcp-servers#_add-an-mcp-server)):
+
+1. Open the Command Palette with `CMD + Shift + P` (macOS) or `Ctrl + Shift + P` (Windows/Linux).
+2. Search for and select `Copilot: Open User Configuration` (typically found in `~/Library/Application Support/Code/User/mcp.json` in macOS).
+3. Add the following to your configuration file:
+
+```json
+{
+  "servers": {
+    "radare2": {
+      "type": "stdio",
+      "command": "docker",
+      "args": ["run", "--rm", "-i", "-v", "/tmp/data:/data", "--entrypoint", "r2mcp", "radare/radare2"]
+    }
+  },
+  "inputs": []
+}
+```
+
+</details>
+
+<details>
+<summary>Zed Integration</summary>
+
+You can use r2mcp with Zed as well by [adding it to your configuration](https://zed.dev/docs/ai/mcp):
+
+1. Open the command palette: `CMD + Shift + P` (macOS) or `Ctrl + Shift + P` (Windows/Linux).1º
+2. Search of `agent: open configuration` or search of `settings`.
+3. Add your server as such:
+
+```json
+  "context_servers": {
+    "r2-mcp-server": {
+      "source": "custom",
+      "command": "docker",
+      "args": ["run", "--rm", "-i", "-v", "/tmp/data:/data", "--entrypoint", "r2mcp", "radare/radare2"]
+      "env": {}
+    }
+  }
+```
+
+Note: you will need another LLM agent, such as Claude, Gemini or else to be able to use it.
+</details>
 
 ## Links
 

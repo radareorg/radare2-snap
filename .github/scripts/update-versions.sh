@@ -20,5 +20,6 @@ R2DEC_VERSION=$(getLatestReleaseTag wargio/r2dec-js)
 YARA_VERSION=$(getLatestReleaseTag VirusTotal/yara v)
 R2YARA_VERSION=$(getLatestReleaseTag radareorg/r2yara)
 R2AI_VERSION=$(getLatestReleaseTag radareorg/r2ai)
+R2MCP_VERSION=$(getLatestReleaseTag radareorg/radare2-mcp)
 R2BOOK_VERSION=$(getLatestReleaseTag radareorg/radare2-book)
 EOF
