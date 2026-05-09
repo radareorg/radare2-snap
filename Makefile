@@ -27,6 +27,7 @@ DOCKER_BUILD_ARGS+= \
 	--build-arg YARA_VERSION=$(YARA_VERSION) \
 	--build-arg R2YARA_VERSION=$(R2YARA_VERSION) \
 	--build-arg R2AI_VERSION=$(R2AI_VERSION) \
+	--build-arg R2MCP_VERSION=$(R2MCP_VERSION) \
 	--build-arg R2BOOK_VERSION=$(R2BOOK_VERSION)
 
 .PHONY: all snap docker update clean \
