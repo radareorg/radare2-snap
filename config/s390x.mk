@@ -1,5 +1,5 @@
-BASE_IMAGE=docker.io/library/ubuntu:24.04
-BASE_SNAP=core24
+BASE_IMAGE=docker.io/library/ubuntu:26.04
+BASE_SNAP=core26
 
 TARGETPLATFORM=linux/s390x
 MULTIARCH=s390x-linux-gnu
