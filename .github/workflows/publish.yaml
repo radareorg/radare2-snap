@@ -83,7 +83,7 @@ jobs:
           SNAPCRAFT_STORE_CREDENTIALS: ${{ secrets.SNAPCRAFT_STORE_CREDENTIALS }}
         with:
           snap: ${{ steps.snap.outputs.file }}
-          release: edge
+          release: stable
 
   merge:
     runs-on: ubuntu-24.04
