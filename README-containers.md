@@ -148,8 +148,8 @@ In the Claude Desktop app, press `CMD + ,` to open the Developer settings. Edit 
 
 1. Locate your Claude Desktop configuration file:
 
-   - macOS: `~/Library/Application Support/Claude/claude_desktop_config.json`
-   - Windows: `%APPDATA%\Claude\claude_desktop_config.json`
+   * macOS: `~/Library/Application Support/Claude/claude_desktop_config.json`
+   * Windows: `%APPDATA%\Claude\claude_desktop_config.json`
 
 2. Add the following to your configuration file:
 
@@ -169,7 +169,7 @@ In the Claude Desktop app, press `CMD + ,` to open the Developer settings. Edit 
 <details>
 <summary>VS Code Integration</summary>
 
-To use r2mcp with GitHub Copilot Chat in Visual Studio Code by [adding it to your user configuration](https://code.visualstudio.com/docs/copilot/chat/mcp-servers#_add-an-mcp-server-to-your-user-configuration) (see other options [here](https://code.visualstudio.com/docs/copilot/chat/mcp-servers#_add-an-mcp-server)):
+To use r2mcp with GitHub Copilot Chat in Visual Studio Code by [adding it to your user configuration](https://code.visualstudio.com/docs/copilot/chat/mcp-servers#_add-an-mcp-server-to-your-user-configuration) (see also [add an mcp server to vscode](https://code.visualstudio.com/docs/copilot/chat/mcp-servers#_add-an-mcp-server)):
 
 1. Open the Command Palette with `CMD + Shift + P` (macOS) or `Ctrl + Shift + P` (Windows/Linux).
 2. Search for and select `Copilot: Open User Configuration` (typically found in `~/Library/Application Support/Code/User/mcp.json` in macOS).
