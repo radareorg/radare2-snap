@@ -204,7 +204,7 @@ You can use r2mcp with Zed as well by [adding it to your configuration](https://
     "r2-mcp-server": {
       "source": "custom",
       "command": "docker",
-      "args": ["run", "--rm", "-i", "-v", "/tmp/data:/data", "--entrypoint", "r2mcp", "radare/radare2"]
+      "args": ["run", "--rm", "-i", "-v", "/tmp/data:/data", "--entrypoint", "r2mcp", "radare/radare2"],
       "env": {}
     }
   }
