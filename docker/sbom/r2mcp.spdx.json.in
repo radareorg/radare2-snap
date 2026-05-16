@@ -1,0 +1,33 @@
+{
+  "SPDXID": "SPDXRef-DOCUMENT",
+  "spdxVersion": "SPDX-2.3",
+  "creationInfo": {
+    "created": "2026-05-16T10:00:00Z",
+    "creators": [ "Organization: radare org" ]
+  },
+  "name": "r2mcp",
+  "dataLicense": "CC0-1.0",
+  "documentDescribes": [
+    "SPDXRef-com.github.radareorg-r2mcp"
+  ],
+  "documentNamespace": "https://github.com/radareorg/radare2-snap/sbom/r2mcp-${R2_SNAP_COMMIT}",
+  "packages": [
+    {
+      "SPDXID": "SPDXRef-com.github.radareorg-r2mcp",
+      "name": "r2mcp",
+      "versionInfo": "${R2MCP_VERSION}",
+      "downloadLocation": "https://github.com/radareorg/radare2-mcp/archive/refs/tags/${R2MCP_VERSION}.tar.gz",
+      "filesAnalyzed": false,
+      "licenseDeclared": "MIT",
+      "supplier": "Organization: radareorg",
+      "primaryPackagePurpose": "LIBRARY",
+      "externalRefs": [
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceType": "purl",
+          "referenceLocator": "pkg:github/radareorg/radare2-mcp@${R2MCP_VERSION}"
+        }
+      ]
+    }
+  ]
+}
