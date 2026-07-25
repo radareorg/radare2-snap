@@ -1,5 +1,5 @@
 ARG BASE_IMAGE
-ARG ALPINE_VERSION=3.23
+ARG ALPINE_VERSION=3.24
 
 ## Native build cross platform
 FROM "${BASE_IMAGE}" AS native-builder
