@@ -1,0 +1,57 @@
+{
+  "SPDXID": "SPDXRef-DOCUMENT",
+  "spdxVersion": "SPDX-2.3",
+  "creationInfo": {
+    "created": "2026-11-22T12:00:00Z",
+    "creators": [ "Organization: radare org" ]
+  },
+  "name": "r2xsql",
+  "dataLicense": "CC0-1.0",
+  "documentDescribes": [
+    "SPDXRef-com.github.radareorg-r2xsql"
+  ],
+  "documentNamespace": "https://github.com/radareorg/radare2-snap/sbom/r2xsql-${R2_SNAP_COMMIT}",
+  "packages": [
+    {
+      "SPDXID": "SPDXRef-com.github.radareorg-r2xsql",
+      "name": "r2xsql",
+      "versionInfo": "${R2XSQL_VERSION}",
+      "downloadLocation": "https://github.com/radareorg/r2xsql/archive/refs/tags/v${R2XSQL_VERSION}.tar.gz",
+      "filesAnalyzed": false,
+      "licenseDeclared": "LicenseRef-Human-Origin-Source-1.0",
+      "supplier": "Organization: radareorg",
+      "primaryPackagePurpose": "LIBRARY",
+      "externalRefs": [
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceType": "purl",
+          "referenceLocator": "pkg:github/radareorg/r2xsql@v${R2XSQL_VERSION}"
+        }
+      ]
+    },
+    {
+      "SPDXID": "SPDXRef-com.github.0xeb-libxsql",
+      "name": "libxsql",
+      "versionInfo": "1.0.21",
+      "downloadLocation": "git+https://github.com/0xeb/libxsql",
+      "filesAnalyzed": false,
+      "licenseDeclared": "LicenseRef-Human-Origin-Source-1.0",
+      "supplier": "Person: Elias Bachaalany",
+      "primaryPackagePurpose": "SOURCE",
+      "externalRefs": [
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceType": "purl",
+          "referenceLocator": "pkg:github/0xeb/libxsql"
+        }
+      ]
+    }
+  ],
+  "relationships": [
+    {
+      "relationshipType": "BUILD_DEPENDENCY_OF",
+      "spdxElementId": "SPDXRef-com.github.0xeb-libxsql",
+      "relatedSpdxElement": "SPDXRef-com.github.radareorg-r2xsql"
+    }
+  ]
+}

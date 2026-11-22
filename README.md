@@ -14,6 +14,7 @@ The resulting build includes the following projects:
 * [r2yara](https://github.com/radareorg/r2yara)
 * [r2ai](https://github.com/radareorg/r2ai)
 * [r2mcp](https://github.com/radareorg/radare2-mcp)
+* [r2xsql](https://github.com/radareorg/r2xsql)
 * [r2book](https://github.com/radareorg/radare2-book) (as `info` file)
 
 ## Install the snap

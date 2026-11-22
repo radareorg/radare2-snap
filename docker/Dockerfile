@@ -106,6 +106,12 @@ RUN curl -L "https://github.com/radareorg/radare2-mcp/archive/refs/tags/${R2MCP_
     ./configure  --prefix="$PREFIX" --with-checks-level=0 && \
     make -C src install
 
+# Add r2xsql
+ARG R2XSQL_VERSION
+RUN curl -L "https://github.com/radareorg/r2xsql/archive/refs/tags/v${R2XSQL_VERSION}.tar.gz" | tar -xz && \
+    cd "r2xsql-v${R2XSQL_VERSION}" && \
+    make && make install
+
 # Add r2book
 ARG R2BOOK_VERSION
 RUN mkdir -p "$PREFIX/share/info" && \
@@ -140,6 +146,7 @@ ARG R2YARA_VERSION
 ARG YARA_VERSION
 ARG R2AI_VERSION
 ARG R2MCP_VERSION
+ARG R2XSQL_VERSION
 ARG R2BOOK_VERSION
 COPY sbom /usr/src/sbom
 RUN set -e; \
